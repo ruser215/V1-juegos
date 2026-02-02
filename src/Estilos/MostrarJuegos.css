@@ -1,48 +1,49 @@
+/* ===== GRID ===== */
 .grid-juegos {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1rem;
 }
 
+/* ===== CARD ===== */
 .card-juego {
-  background: #1e1e1e;
-  color: #fff;
+  background: #111827;
   border-radius: 12px;
-  padding: 1rem;
+  padding: 0.6rem;
   cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
 }
 
 .card-juego:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
 }
 
 .card-juego img {
   width: 100%;
+  height: 180px;
+  object-fit: cover;
   border-radius: 8px;
-  margin-bottom: 0.5rem;
 }
 
-.card-juego h2 {
-  font-size: 1.1rem;
-  margin: 0.5rem 0;
-}
-
-.card-juego p {
+.card-juego h3 {
   font-size: 0.9rem;
-  color: #ccc;
+  margin: 0.4rem 0;
+  color: #fff;
 }
 
-/* MODAL */
+.precio {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #f4a261;
+}
 
+/* ===== MODAL ===== */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.7);
+  inset: 0;
+  background: rgba(0,0,0,0.75);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -50,28 +51,75 @@
 }
 
 .modal {
-  background: #111;
-  color: #fff;
-  padding: 2rem;
-  border-radius: 12px;
-  max-width: 600px;
+  background: #0b1020;
+  border-radius: 14px;
+  max-width: 900px;
   width: 90%;
-  max-height: 90vh;
-  overflow-y: auto;
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
 }
 
-.modal img {
-  width: 100%;
-  border-radius: 8px;
-  margin-bottom: 1rem;
+.modal-portada {
+  width: 260px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.modal-info {
+  flex: 1;
+  color: #e5e7eb;
+}
+
+.modal-info h2 {
+  margin-top: 0;
+}
+
+.modal-info p {
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* ===== CHIPS ===== */
+.chips {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 4px 0 10px;
+}
+
+.chip {
+  padding: 3px 8px;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+
+.chip.categoria {
+  background: linear-gradient(135deg, #5ddcff, #c77dff);
+  color: #0b0f1f;
+}
+
+.chip.plataforma {
+  background: linear-gradient(135deg, #2a9d8f, #1e7f74);
+  color: #fff;
+}
+
+.precio-modal {
+  margin-top: 10px;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #f4a261;
 }
 
 .modal button {
-  margin-top: 1rem;
-  padding: 0.5rem 1.5rem;
-  background: #e63946;
+  margin-top: 10px;
+  padding: 6px 14px;
+  border-radius: 8px;
   border: none;
+  background: #2a9d8f;
   color: #fff;
-  border-radius: 6px;
   cursor: pointer;
 }
+
+
