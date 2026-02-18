@@ -1,273 +1,830 @@
 {
-    "categorias":[
-        {"id":"1", "nombre":"Lucha"},
-        {"id":"2", "nombre":"Carreras"},
-        {"id":"3", "nombre":"Deportes"},
-        {"id":"4", "nombre":"Aventura"},
-        {"id":"5", "nombre":"Estrategia"},
-        {"id":"6", "nombre":"Simulación"},
-        {"id":"7", "nombre":"Rol"},
-        {"id":"8", "nombre":"Acción"},
-        {"id":"9", "nombre":"Plataformas"},
-        {"id":"10", "nombre":"Puzzle"},
-        {"id":"11","nombre": "Disparos"},
-        {"id":"12","nombre": "Terror"},
-        {"id":"13","nombre": "Música"},
-        {"id":"14","nombre": "Educativo"},
-        {"id":"15","nombre": "Multijugador"},
-        {"id":"16","nombre": "Indie"},
-        {"id":"17","nombre": "VR"},
-        {"id":"18","nombre": "Sandbox"},
-        {"id":"19","nombre": "Supervivencia"},
-        {"id":"20","nombre": "Narrativo"},
-        {"id":"21","nombre": "Arcade"},
-        {"id":"22", "nombre": "Pixel Art" },
-        {"id":"23", "nombre": "Open World"},
-        {"id":"24", "nombre": "Ciencia Ficción"},
-        {"id":"25", "nombre": "Histórico"},
-        {"id":"26", "nombre": "Familia"},
-        {"id":"27", "nombre": "Casual"},
-        {"id":"29", "nombre": "Cartas"},
-        {"id":"30", "nombre": "Táctico"},
-        {"id":"31", "nombre": "MOBA"},
-        {"id":"32", "nombre": "Battle Royale"},
-        {"id":"33", "nombre": "Guerra"},
-        {"id":"34", "nombre": "Stealth"},
-        {"id":"35", "nombre": "Metroidvania"},
-        {"id":"36", "nombre": "Visual Novel"},
-        {"id":"37", "nombre": "Tower Defense"},
-        {"id":"38", "nombre": "Roguelike"},
-        {"id":"39", "nombre": "Roguelite"},
-        {"id":"40", "nombre": "Beat 'em up"}       
-    ],
-    "plataformas":[
-        {"id":"1", "nombre":"PC"},
-        {"id":"2", "nombre":"PlayStation 5"},
-        {"id":"3", "nombre":"PlayStation 4"},
-        {"id":"4", "nombre":"Xbox Series X/S"},
-        {"id":"5", "nombre":"Xbox One"},
-        {"id":"6", "nombre":"Nintendo Switch"},
-        {"id":"7", "nombre":"iOS"},
-        {"id":"8", "nombre":"Android"},
-        {"id":"9", "nombre":"Mac"},
-        {"id":"10", "nombre":"Linux"}
-    ],
-    "juegos":[
-  {
-    "id": "1",
-    "nombre": "The Witcher 3: Wild Hunt",
-    "categoria_ids": ["4", "7", "20", "23"],
-    "plataforma_ids": ["1", "2", "3", "4", "5", "6"],
-    "Portada": "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
-    "Descripcion": "The Witcher 3: Wild Hunt es un RPG de acción en mundo abierto donde encarnas a Geralt de Rivia, un cazador de monstruos en un oscuro y detallado mundo de fantasía.",
-    "precio": "39.99"
-  },
-  {
-    "id": "2",
-    "nombre": "God of War",
-    "categoria_ids": ["4", "7", "8", "20"],
-    "plataforma_ids": ["2", "3"],
-    "Portada": "https://www.codigi.es/wp-content/uploads/2022/02/god-of-war-pc-game-steam-cover-1.jpg",
-    "Descripcion": "God of War es una épica aventura de acción que sigue a Kratos y su hijo Atreus en la mitología nórdica.",
-    "precio": "49.99"
-  },
-  {
-    "id": "3",
-    "nombre": "Minecraft",
-    "categoria_ids": ["6", "18", "19", "23"],
-    "plataforma_ids": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-    "Portada": "https://media.vandal.net/m/22007/minecraft-playstation-4-edition-201495132813_1.jpg",
-    "Descripcion": "Minecraft es un juego de construcción y supervivencia en un mundo abierto generado por bloques.",
-    "precio": "26.95"
-  },
-  {
-    "id": "4",
-    "nombre": "Among Us",
-    "categoria_ids": ["15", "21", "27"],
-    "plataforma_ids": ["1", "2", "3", "4", "5", "6", "7", "8"],
-    "Portada": "https://uvejuegos.com/img/caratulas/65151/Among-Us_logo.jpg",
-    "Descripcion": "Among Us es un juego multijugador social de cooperación y engaño.",
-    "precio": "4.99"
-  },
-  {
-    "id": "5",
-    "nombre": "Hades",
-    "categoria_ids": ["8", "38", "39"],
-    "plataforma_ids": ["1", "2", "3", "4", "5", "6"],
-    "Portada": "https://static.wikia.nocookie.net/hades/images/a/a0/Hades_Pack_Art.png",
-    "Descripcion": "Hades es un roguelike de acción donde Zagreus intenta escapar del inframundo.",
-    "precio": "24.99"
-  },
-  {
-    "id": "6",
-    "nombre": "Celeste",
-    "categoria_ids": ["9", "16", "22"],
-    "plataforma_ids": ["1", "2", "3", "4", "5", "6"],
-    "Portada": "https://media.vandal.net/m/44239/celeste-2018128121116_11.jpg",
-    "Descripcion": "Celeste es un juego de plataformas desafiante con una narrativa emotiva.",
-    "precio": "19.99"
-  },
-  {
-    "id": "7",
-    "nombre": "Stardew Valley",
-    "categoria_ids": ["6", "16", "20", "27"],
-    "plataforma_ids": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-    "Portada": "https://i.3djuegos.com/juegos/12908/stardew_valley/fotos/ficha/stardew_valley-3324716.jpg",
-    "Descripcion": "Stardew Valley es un juego de simulación de granja con estilo retro.",
-    "precio": "14.99"
-  },
-  {
-    "id": "8",
-    "nombre": "The Legend of Zelda: Breath of the Wild",
-    "categoria_ids": ["4", "20", "23"],
-    "plataforma_ids": ["6"],
-    "Portada": "https://i.3djuegos.com/juegos/9205/zelda_wii_u/fotos/ficha/zelda_wii_u-5953251.webp",
-    "Descripcion": "Una aventura épica en un vasto mundo abierto lleno de descubrimientos.",
-    "precio": "59.99"
-  },
-  {
-    "id": "9",
-    "nombre": "DOOM Eternal",
-    "categoria_ids": ["8", "11"],
-    "plataforma_ids": ["1", "2", "3", "4", "5"],
-    "Portada": "https://images.ctfassets.net/rporu91m20dc/5Nt4admHE2zmiHbH8ujGp6/e8809924794a52423653b00bac1689c4/DOOM-Eternal_Standard_1200x1476-01.jpg",
-    "Descripcion": "Un FPS intenso con combates rápidos y frenéticos.",
-    "precio": "39.99"
-  },
-  {
-    "id": "10",
-    "nombre": "Animal Crossing: New Horizons",
-    "categoria_ids": ["6", "26", "27"],
-    "plataforma_ids": ["6"],
-    "Portada": "https://cdn.cdkeys.com/496x700/media/catalog/product/f/i/fifa-22-pc-game-origin-cover_14_.jpg",
-    "Descripcion": "Simulación de vida relajante en una isla paradisíaca.",
-    "precio": "59.99"
-  },
-  {
-    "id": "11",
-    "nombre": "Cyberpunk 2077",
-    "categoria_ids": ["4", "7", "23", "24"],
-    "plataforma_ids": ["1", "2", "3", "4", "5"],
-    "Portada": "https://wallpapers.com/images/featured/cyberpunk-2077-q0o5txv6a3pqp7a9.jpg",
-    "Descripcion": "RPG futurista ambientado en la distópica Night City.",
-    "precio": "49.99"
-  },
-  {
-    "id": "12",
-    "nombre": "Dark Souls III",
-    "categoria_ids": ["7", "8", "19"],
-    "plataforma_ids": ["1", "2", "3", "4", "5"],
-    "Portada": "https://image.api.playstation.com/cdn/EP0700/CUSA03365_00/OFMeAw2KhrdaEZAjW1f3tCIXbogkLpTC.png",
-    "Descripcion": "RPG de acción desafiante en un mundo oscuro.",
-    "precio": "59.99"
-  },
-  {
-    "id": "13",
-    "nombre": "Resident Evil Village",
-    "categoria_ids": ["12", "8", "19"],
-    "plataforma_ids": ["1", "2", "3", "4", "5"],
-    "Portada": "https://media.vandal.net/m/9-2022/resident-evil-village-cloud-2022914054848_7.jpg",
-    "Descripcion": "Horror de supervivencia con una narrativa intensa.",
-    "precio": "59.99"
-  },
-  {
-    "id": "14",
-    "nombre": "The Binding of Isaac: Rebirth",
-    "categoria_ids": ["38", "39", "22"],
-    "plataforma_ids": ["1", "2", "3", "4", "5", "6"],
-    "Portada": "https://image.api.playstation.com/cdn/EP2103/CUSA01344_00/Na433N23qGTKPfbdT9hA6ZmCGpFG2OGI.png",
-    "Descripcion": "Roguelike oscuro con estilo pixel art.",
-    "precio": "14.99"
-  },
-  {
-    "id": "15",
-    "nombre": "Oh Demon! Fix my TV",
-    "categoria_ids": ["16", "27", "21"],
-    "plataforma_ids": ["1"],
-    "Portada": "https://cdn.devuego.es/portadas/oh-demon-fix-my-tv.jpg",
-    "Descripcion": "Juego indie arcade con humor absurdo.",
-    "precio": "9.99"
-  },
-  {
-    "id": "16",
-    "nombre": "Portal 2",
-    "categoria_ids": ["10", "24"],
-    "plataforma_ids": ["1", "2", "3", "4", "5"],
-    "Portada": "https://media.vandal.net/m/8775/20101225101630_1.jpg",
-    "Descripcion": "Puzzle en primera persona con narrativa y humor.",
-    "precio": "19.99"
-  },
-  {
-    "id": "17",
-    "nombre": "Red Dead Redemption 2",
-    "categoria_ids": ["4", "7", "20", "23"],
-    "plataforma_ids": ["1", "3", "5"],
-    "Portada": "https://media.vandal.net/m/42944/red-dead-redemption-2-2019101812583956_1.jpg",
-    "Descripcion": "Red Dead Redemption 2 es una épica aventura narrativa ambientada en el salvaje oeste, con un enorme mundo abierto lleno de historias y personajes memorables.",
-    "precio": "59.99"
-  },
-  {
-    "id": "18",
-    "nombre": "Elden Ring",
-    "categoria_ids": ["7", "8", "19", "23"],
-    "plataforma_ids": ["1", "2", "3", "4", "5"],
-    "Portada": "https://media.vandal.net/m/102076/elden-ring-20216121316990_1.jpg",
-    "Descripcion": "Elden Ring combina la dificultad característica de FromSoftware con un vasto mundo abierto lleno de exploración y combates desafiantes.",
-    "precio": "69.99"
-  },
-  {
-    "id": "19",
-    "nombre": "Hollow Knight",
-    "categoria_ids": ["9", "16", "35"],
-    "plataforma_ids": ["1", "3", "5", "6", "9", "10"],
-    "Portada": "https://pics.filmaffinity.com/Hollow_Knight-986585901-large.jpg",
-    "Descripcion": "Hollow Knight es un metroidvania indie con exploración profunda, combates precisos y un mundo oscuro dibujado a mano.",
-    "precio": "14.99"
-  },
-  {
-    "id": "20",
-    "nombre": "FIFA 24",
-    "categoria_ids": ["3", "15"],
-    "plataforma_ids": ["1", "2", "3", "4", "5", "6"],
-    "Portada": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS01Oqn01zRu7D6gYz9O3PZW7H9TECGpFi1WA&s",
-    "Descripcion": "FIFA 24 ofrece una experiencia de fútbol realista con modos multijugador y licencias oficiales.",
-    "precio": "69.99"
-  },
-  {
-    "id": "21",
-    "nombre": "Dead Cells",
-    "categoria_ids": ["8", "38", "35"],
-    "plataforma_ids": ["1", "3", "5", "6", "7", "8"],
-    "Portada": "https://cdn1.epicgames.com/1368a7f14c3344bbaededbae528fafed/offer/EGS_DeadCells_MotionTwin_S2-1200x1600-34d9d5ebca89e17e0a26ddb2cb158b75.jpg",
-    "Descripcion": "Dead Cells es un roguelike de acción con combates rápidos y niveles generados proceduralmente.",
-    "precio": "24.99"
-  },
-  {
-    "id": "22",
-    "nombre": "The Sims 4",
-    "categoria_ids": ["6", "26", "27"],
-    "plataforma_ids": ["1", "3", "5", "9"],
-    "Portada": "https://media.vandal.net/m/21058/los-sims-4-201494113415_1.jpg",
-    "Descripcion": "The Sims 4 permite crear y controlar personajes en una completa simulación de vida.",
-    "precio": "39.99"
-  },
-  {
-    "id": "24",
-    "nombre": "Call of Duty: Modern Warfare II",
-    "categoria_ids": ["11", "8", "15"],
-    "plataforma_ids": ["1", "2", "3", "4", "5"],
-    "Portada": "https://i.3djuegos.com/juegos/18491/call_of_duty_modern_warfare_2/fotos/ficha/call_of_duty_modern_warfare_2-5754880.webp",
-    "Descripcion": "Shooter en primera persona con campaña cinematográfica y modos multijugador competitivos.",
-    "precio": "69.99"
-  },
-  {
-    "id": "25",
-    "nombre": "Undertale",
-    "categoria_ids": ["16", "20", "22"],
-    "plataforma_ids": ["1", "3", "5", "6", "9", "10"],
-    "Portada": "https://pics.filmaffinity.com/undertale-344809895-large.jpg",
-    "Descripcion": "Undertale es un RPG indie narrativo donde las decisiones afectan a la historia.",
-    "precio": "9.99"
-  }
-]
+  "usuarios": [
+    {
+      "id": "1",
+      "nombre": "admin",
+      "email": "Aamin@gmail.com",
+      "password": "admin"
+    },
+    {
+      "id": "2",
+      "nombre": "usuario",
+      "email": "usuario@gmail.com",
+      "password": "usuario"
+    }
+  ],
+  "carrito": [
+    {
+      "id": "1",
+      "id_usuario": "1",
+      "id_productos": [
+        "1",
+        "2",
+        "3"
+      ]
+    },
+    {
+      "id": "2",
+      "id_usuario": "2",
+      "id_productos": [
+        "4",
+        "5",
+        "6"
+      ]
+    }
+  ],
+  "companias": [
+    {
+      "id": "1",
+      "nombre": "Nintendo"
+    },
+    {
+      "id": "2",
+      "nombre": "Sony Interactive Entertainment"
+    },
+    {
+      "id": "3",
+      "nombre": "Microsoft Studios"
+    },
+    {
+      "id": "4",
+      "nombre": "Ubisoft"
+    },
+    {
+      "id": "5",
+      "nombre": "Electronic Arts"
+    },
+    {
+      "id": "6",
+      "nombre": "Activision Blizzard"
+    },
+    {
+      "id": "7",
+      "nombre": "Bandai Namco"
+    },
+    {
+      "id": "8",
+      "nombre": "Square Enix"
+    },
+    {
+      "id": "9",
+      "nombre": "Studio Demo"
+    }
+  ],
+  "categorias": [
+    {
+      "id": "1",
+      "nombre": "Lucha"
+    },
+    {
+      "id": "2",
+      "nombre": "Carreras"
+    },
+    {
+      "id": "3",
+      "nombre": "Deportes"
+    },
+    {
+      "id": "4",
+      "nombre": "Aventura"
+    },
+    {
+      "id": "5",
+      "nombre": "Estrategia"
+    },
+    {
+      "id": "6",
+      "nombre": "Simulación"
+    },
+    {
+      "id": "7",
+      "nombre": "Rol"
+    },
+    {
+      "id": "8",
+      "nombre": "Acción"
+    },
+    {
+      "id": "9",
+      "nombre": "Plataformas"
+    },
+    {
+      "id": "10",
+      "nombre": "Puzzle"
+    },
+    {
+      "id": "11",
+      "nombre": "Disparos"
+    },
+    {
+      "id": "12",
+      "nombre": "Terror"
+    },
+    {
+      "id": "13",
+      "nombre": "Música"
+    },
+    {
+      "id": "14",
+      "nombre": "Educativo"
+    },
+    {
+      "id": "15",
+      "nombre": "Multijugador"
+    },
+    {
+      "id": "16",
+      "nombre": "Indie"
+    },
+    {
+      "id": "17",
+      "nombre": "VR"
+    },
+    {
+      "id": "18",
+      "nombre": "Sandbox"
+    },
+    {
+      "id": "19",
+      "nombre": "Supervivencia"
+    },
+    {
+      "id": "20",
+      "nombre": "Narrativo"
+    },
+    {
+      "id": "21",
+      "nombre": "Arcade"
+    },
+    {
+      "id": "22",
+      "nombre": "Pixel Art"
+    },
+    {
+      "id": "23",
+      "nombre": "Open World"
+    },
+    {
+      "id": "24",
+      "nombre": "Ciencia Ficción"
+    },
+    {
+      "id": "25",
+      "nombre": "Histórico"
+    },
+    {
+      "id": "26",
+      "nombre": "Familia"
+    },
+    {
+      "id": "27",
+      "nombre": "Casual"
+    },
+    {
+      "id": "29",
+      "nombre": "Cartas"
+    },
+    {
+      "id": "30",
+      "nombre": "Táctico"
+    },
+    {
+      "id": "31",
+      "nombre": "MOBA"
+    },
+    {
+      "id": "32",
+      "nombre": "Battle Royale"
+    },
+    {
+      "id": "33",
+      "nombre": "Guerra"
+    },
+    {
+      "id": "34",
+      "nombre": "Stealth"
+    },
+    {
+      "id": "35",
+      "nombre": "Metroidvania"
+    },
+    {
+      "id": "36",
+      "nombre": "Visual Novel"
+    },
+    {
+      "id": "37",
+      "nombre": "Tower Defense"
+    },
+    {
+      "id": "38",
+      "nombre": "Roguelike"
+    },
+    {
+      "id": "39",
+      "nombre": "Roguelite"
+    },
+    {
+      "id": "40",
+      "nombre": "Beat 'em up"
+    },
+    {
+      "id": "41",
+      "nombre": "Shooter"
+    },
+    {
+      "id": "42",
+      "nombre": "Deporte"
+    },
+    {
+      "id": "43",
+      "nombre": "Educación"
+    }
+  ],
+  "plataformas": [
+    {
+      "id": "1",
+      "nombre": "PC"
+    },
+    {
+      "id": "2",
+      "nombre": "PlayStation 5"
+    },
+    {
+      "id": "3",
+      "nombre": "PlayStation 4"
+    },
+    {
+      "id": "4",
+      "nombre": "Xbox Series X/S"
+    },
+    {
+      "id": "5",
+      "nombre": "Xbox One"
+    },
+    {
+      "id": "6",
+      "nombre": "Nintendo Switch"
+    },
+    {
+      "id": "7",
+      "nombre": "iOS"
+    },
+    {
+      "id": "8",
+      "nombre": "Android"
+    },
+    {
+      "id": "9",
+      "nombre": "Mac"
+    },
+    {
+      "id": "10",
+      "nombre": "Linux"
+    },
+    {
+      "id": "11",
+      "nombre": "PS5"
+    },
+    {
+      "id": "12",
+      "nombre": "Switch"
+    },
+    {
+      "id": "13",
+      "nombre": "Otras"
+    }
+  ],
+  "juegos": [
+    {
+      "id": "1",
+      "nombre": "The Witcher 3: Wild Hunt",
+      "categoria_ids": [
+        "4",
+        "7",
+        "20",
+        "23"
+      ],
+      "plataforma_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "Portada": "https://image.api.playstation.com/vulcan/ap/rnd/202211/0711/kh4MUIuMmHlktOHar3lVl6rY.png",
+      "Descripcion": "The Witcher 3: Wild Hunt es un RPG de acción en mundo abierto donde encarnas a Geralt de Rivia, un cazador de monstruos en un oscuro y detallado mundo de fantasía.",
+      "precio": "39.99",
+      "compania_id": "4"
+    },
+    {
+      "id": "2",
+      "nombre": "God of War",
+      "categoria_ids": [
+        "4",
+        "7",
+        "8",
+        "20"
+      ],
+      "plataforma_ids": [
+        "2",
+        "3"
+      ],
+      "Portada": "https://www.codigi.es/wp-content/uploads/2022/02/god-of-war-pc-game-steam-cover-1.jpg",
+      "Descripcion": "God of War es una épica aventura de acción que sigue a Kratos y su hijo Atreus en la mitología nórdica.",
+      "precio": "49.99",
+      "compania_id": "2"
+    },
+    {
+      "id": "3",
+      "nombre": "Minecraft",
+      "categoria_ids": [
+        "6",
+        "18",
+        "19",
+        "23"
+      ],
+      "plataforma_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10"
+      ],
+      "Portada": "https://media.vandal.net/m/22007/minecraft-playstation-4-edition-201495132813_1.jpg",
+      "Descripcion": "Minecraft es un juego de construcción y supervivencia en un mundo abierto generado por bloques.",
+      "precio": "26.95",
+      "compania_id": "3"
+    },
+    {
+      "id": "4",
+      "nombre": "Among Us",
+      "categoria_ids": [
+        "15",
+        "21",
+        "27"
+      ],
+      "plataforma_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "Portada": "https://uvejuegos.com/img/caratulas/65151/Among-Us_logo.jpg",
+      "Descripcion": "Among Us es un juego multijugador social de cooperación y engaño.",
+      "precio": "4.99",
+      "compania_id": "3"
+    },
+    {
+      "id": "5",
+      "nombre": "Hades",
+      "categoria_ids": [
+        "8",
+        "38",
+        "39"
+      ],
+      "plataforma_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "Portada": "https://static.wikia.nocookie.net/hades/images/a/a0/Hades_Pack_Art.png",
+      "Descripcion": "Hades es un roguelike de acción donde Zagreus intenta escapar del inframundo.",
+      "precio": "24.99",
+      "compania_id": "5"
+    },
+    {
+      "id": "6",
+      "nombre": "Celeste",
+      "categoria_ids": [
+        "9",
+        "16",
+        "22"
+      ],
+      "plataforma_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "Portada": "https://media.vandal.net/m/44239/celeste-2018128121116_11.jpg",
+      "Descripcion": "Celeste es un juego de plataformas desafiante con una narrativa emotiva.",
+      "precio": "19.99",
+      "compania_id": "6"
+    },
+    {
+      "id": "7",
+      "nombre": "Stardew Valley",
+      "categoria_ids": [
+        "6",
+        "16",
+        "20",
+        "27"
+      ],
+      "plataforma_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10"
+      ],
+      "Portada": "https://i.3djuegos.com/juegos/12908/stardew_valley/fotos/ficha/stardew_valley-3324716.jpg",
+      "Descripcion": "Stardew Valley es un juego de simulación de granja con estilo retro.",
+      "precio": "14.99",
+      "compania_id": "7"
+    },
+    {
+      "id": "8",
+      "nombre": "The Legend of Zelda: Breath of the Wild",
+      "categoria_ids": [
+        "4",
+        "20",
+        "23"
+      ],
+      "plataforma_ids": [
+        "6"
+      ],
+      "Portada": "https://i.3djuegos.com/juegos/9205/zelda_wii_u/fotos/ficha/zelda_wii_u-5953251.webp",
+      "Descripcion": "Una aventura épica en un vasto mundo abierto lleno de descubrimientos.",
+      "precio": "59.99",
+      "compania_id": "8"
+    },
+    {
+      "id": "9",
+      "nombre": "DOOM Eternal",
+      "categoria_ids": [
+        "8",
+        "11"
+      ],
+      "plataforma_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "Portada": "https://images.ctfassets.net/rporu91m20dc/5Nt4admHE2zmiHbH8ujGp6/e8809924794a52423653b00bac1689c4/DOOM-Eternal_Standard_1200x1476-01.jpg",
+      "Descripcion": "Un FPS intenso con combates rápidos y frenéticos.",
+      "precio": "39.99",
+      "compania_id": "9"
+    },
+    {
+      "id": "10",
+      "nombre": "Animal Crossing: New Horizons",
+      "categoria_ids": [
+        "6",
+        "26",
+        "27"
+      ],
+      "plataforma_ids": [
+        "6"
+      ],
+      "Portada": "https://cdn.cdkeys.com/496x700/media/catalog/product/f/i/fifa-22-pc-game-origin-cover_14_.jpg",
+      "Descripcion": "Simulación de vida relajante en una isla paradisíaca.",
+      "precio": "59.99",
+      "compania_id": "1"
+    },
+    {
+      "id": "11",
+      "nombre": "Cyberpunk 2077",
+      "categoria_ids": [
+        "4",
+        "7",
+        "23",
+        "24"
+      ],
+      "plataforma_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "Portada": "https://wallpapers.com/images/featured/cyberpunk-2077-q0o5txv6a3pqp7a9.jpg",
+      "Descripcion": "RPG futurista ambientado en la distópica Night City.",
+      "precio": "49.99",
+      "compania_id": "2"
+    },
+    {
+      "id": "12",
+      "nombre": "Dark Souls III",
+      "categoria_ids": [
+        "7",
+        "8",
+        "19"
+      ],
+      "plataforma_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "Portada": "https://image.api.playstation.com/cdn/EP0700/CUSA03365_00/OFMeAw2KhrdaEZAjW1f3tCIXbogkLpTC.png",
+      "Descripcion": "RPG de acción desafiante en un mundo oscuro.",
+      "precio": "59.99",
+      "compania_id": "3"
+    },
+    {
+      "id": "13",
+      "nombre": "Resident Evil Village",
+      "categoria_ids": [
+        "12",
+        "8",
+        "19"
+      ],
+      "plataforma_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "Portada": "https://media.vandal.net/m/9-2022/resident-evil-village-cloud-2022914054848_7.jpg",
+      "Descripcion": "Horror de supervivencia con una narrativa intensa.",
+      "precio": "59.99",
+      "compania_id": "4"
+    },
+    {
+      "id": "14",
+      "nombre": "The Binding of Isaac: Rebirth",
+      "categoria_ids": [
+        "38",
+        "39",
+        "22"
+      ],
+      "plataforma_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "Portada": "https://image.api.playstation.com/cdn/EP2103/CUSA01344_00/Na433N23qGTKPfbdT9hA6ZmCGpFG2OGI.png",
+      "Descripcion": "Roguelike oscuro con estilo pixel art.",
+      "precio": "14.99",
+      "compania_id": "5"
+    },
+    {
+      "id": "15",
+      "nombre": "Oh Demon! Fix my TV",
+      "categoria_ids": [
+        "16",
+        "27",
+        "21"
+      ],
+      "plataforma_ids": [
+        "1"
+      ],
+      "Portada": "https://cdn.devuego.es/portadas/oh-demon-fix-my-tv.jpg",
+      "Descripcion": "Juego indie arcade con humor absurdo.",
+      "precio": "9.99",
+      "compania_id": "6"
+    },
+    {
+      "id": "16",
+      "nombre": "Portal 2",
+      "categoria_ids": [
+        "10",
+        "24"
+      ],
+      "plataforma_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "Portada": "https://media.vandal.net/m/8775/20101225101630_1.jpg",
+      "Descripcion": "Puzzle en primera persona con narrativa y humor.",
+      "precio": "19.99",
+      "compania_id": "7"
+    },
+    {
+      "id": "17",
+      "nombre": "Red Dead Redemption 2",
+      "categoria_ids": [
+        "4",
+        "7",
+        "20",
+        "23"
+      ],
+      "plataforma_ids": [
+        "1",
+        "3",
+        "5"
+      ],
+      "Portada": "https://media.vandal.net/m/42944/red-dead-redemption-2-2019101812583956_1.jpg",
+      "Descripcion": "Red Dead Redemption 2 es una épica aventura narrativa ambientada en el salvaje oeste, con un enorme mundo abierto lleno de historias y personajes memorables.",
+      "precio": "59.99",
+      "compania_id": "8"
+    },
+    {
+      "id": "18",
+      "nombre": "Elden Ring",
+      "categoria_ids": [
+        "7",
+        "8",
+        "19",
+        "23"
+      ],
+      "plataforma_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "Portada": "https://media.vandal.net/m/102076/elden-ring-20216121316990_1.jpg",
+      "Descripcion": "Elden Ring combina la dificultad característica de FromSoftware con un vasto mundo abierto lleno de exploración y combates desafiantes.",
+      "precio": "69.99",
+      "compania_id": "7"
+    },
+    {
+      "id": "19",
+      "nombre": "Hollow Knight",
+      "categoria_ids": [
+        "9",
+        "16",
+        "35"
+      ],
+      "plataforma_ids": [
+        "1",
+        "3",
+        "5",
+        "6",
+        "9",
+        "10"
+      ],
+      "Portada": "https://i.3djuegos.com/juegos/11596/hollow_knight/fotos/ficha/hollow_knight-3915488.webp",
+      "Descripcion": "Hollow Knight es un metroidvania indie con exploración profunda, combates precisos y un mundo oscuro dibujado a mano.",
+      "precio": "14.99",
+      "compania_id": "1"
+    },
+    {
+      "id": "20",
+      "nombre": "FIFA 24",
+      "categoria_ids": [
+        "3",
+        "15"
+      ],
+      "plataforma_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6"
+      ],
+      "Portada": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS01Oqn01zRu7D6gYz9O3PZW7H9TECGpFi1WA&s",
+      "Descripcion": "FIFA 24 ofrece una experiencia de fútbol realista con modos multijugador y licencias oficiales.",
+      "precio": "69.99",
+      "compania_id": "5"
+    },
+    {
+      "id": "21",
+      "nombre": "Dead Cells",
+      "categoria_ids": [
+        "8",
+        "38",
+        "35"
+      ],
+      "plataforma_ids": [
+        "1",
+        "3",
+        "5",
+        "6",
+        "7",
+        "8"
+      ],
+      "Portada": "https://cdn1.epicgames.com/1368a7f14c3344bbaededbae528fafed/offer/EGS_DeadCells_MotionTwin_S2-1200x1600-34d9d5ebca89e17e0a26ddb2cb158b75.jpg",
+      "Descripcion": "Dead Cells es un roguelike de acción con combates rápidos y niveles generados proceduralmente.",
+      "precio": "24.99",
+      "compania_id": "9"
+    },
+    {
+      "id": "22",
+      "nombre": "The Sims 4",
+      "categoria_ids": [
+        "6",
+        "26",
+        "27"
+      ],
+      "plataforma_ids": [
+        "1",
+        "3",
+        "5",
+        "9"
+      ],
+      "Portada": "https://media.vandal.net/m/21058/los-sims-4-201494113415_1.jpg",
+      "Descripcion": "The Sims 4 permite crear y controlar personajes en una completa simulación de vida.",
+      "precio": "39.99",
+      "compania_id": "5"
+    },
+    {
+      "id": "24",
+      "nombre": "Call of Duty: Modern Warfare II",
+      "categoria_ids": [
+        "11",
+        "8",
+        "15",
+        "33"
+      ],
+      "plataforma_ids": [
+        "1",
+        "2",
+        "3",
+        "4",
+        "5"
+      ],
+      "Portada": "https://i.3djuegos.com/juegos/18491/call_of_duty_modern_warfare_2/fotos/ficha/call_of_duty_modern_warfare_2-5754880.webp",
+      "Descripcion": "Shooter en primera persona con campaña cinematográfica y modos multijugador competitivos.",
+      "precio": "69.99",
+      "compania_id": "6"
+    },
+    {
+      "id": "25",
+      "nombre": "Undertale",
+      "categoria_ids": [
+        "16",
+        "20",
+        "22"
+      ],
+      "plataforma_ids": [
+        "1",
+        "3",
+        "5",
+        "6",
+        "9",
+        "10"
+      ],
+      "Portada": "https://m.media-amazon.com/images/M/MV5BYmYxY2E3MjktYmIxNi00MGZiLWJlM2UtYjQ2ZTkwZDVmMDE2XkEyXkFqcGc@._V1_.jpg",
+      "Descripcion": "Undertale es un RPG indie narrativo donde las decisiones afectan a la historia.",
+      "precio": "9.99",
+      "compania_id": "9"
+    },
+    {
+      "id": "26",
+      "nombre": "Cuphead",
+      "categoria_ids": [
+        "9",
+        "16",
+        "21",
+        "39"
+      ],
+      "plataforma_ids": [
+        "1",
+        "3",
+        "5",
+        "6",
+        "9"
+      ],
+      "Portada": "https://i.3djuegos.com/juegos/10583/cuphead/fotos/ficha/cuphead-3841932.jpg",
+      "Descripcion": "Cuphead es un juego de acción clásico estilo 'run and gun' centrado en combates contra jefes, inspirado en los dibujos animados de los años 30.",
+      "precio": "19.99",
+      "compania_id": "9"
+    },
+    {
+      "id": "27",
+      "nombre": "Juego Genérico DAM",
+      "categoria_ids": [
+        "9",
+        "41",
+        "43"
+      ],
+      "plataforma_ids": [
+        "1",
+        "11",
+        "13"
+      ],
+      "fecha_lanzamiento": "2026-02-18",
+      "compania": "Studio Demo",
+      "Portada": "https://via.placeholder.com/600x800.png?text=Juego+Generico",
+      "video": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "Descripcion": "Videojuego genérico de ejemplo para la práctica DAM. Incluye todos los campos requeridos por el enunciado.",
+      "precio": "29.99",
+      "compania_id": "9"
+    }
+  ]
 }

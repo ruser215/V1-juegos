@@ -1,125 +1,329 @@
-/* ===== GRID ===== */
+/* ===== GRID DE JUEGOS ===== */
 .grid-juegos {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 2rem;
+  padding: 1rem;
 }
 
-/* ===== CARD ===== */
+/* ===== TARJETA DE JUEGO ===== */
 .card-juego {
-  background: #111827;
-  border-radius: 12px;
-  padding: 0.6rem;
+  background: var(--retro-dark-grey);
+  border-radius: 0;
+  padding: 1rem;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 4px solid var(--retro-white);
+  box-shadow: var(--shadow-hard);
+  transition: transform 0.1s steps(2), box-shadow 0.1s steps(2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   text-align: center;
+  position: relative;
+}
+
+.card-juego::after {
+  display: none;
 }
 
 .card-juego:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  transform: translate(-4px, -4px);
+  border-color: var(--retro-pink);
+  box-shadow: 8px 8px 0px var(--retro-cyan);
+  background: var(--retro-black);
 }
 
 .card-juego img {
   width: 100%;
-  height: 180px;
+  max-height: 160px;
   object-fit: cover;
-  border-radius: 8px;
+  border-radius: 0;
+  margin-bottom: 1rem;
+  border: 2px solid var(--retro-white);
+  image-rendering: pixelated;
+  /* Enhance retro feel for images */
 }
 
-.card-juego h3 {
-  font-size: 0.9rem;
-  margin: 0.4rem 0;
-  color: #fff;
+.card-juego h2 {
+  font-size: 1rem;
+  margin: 0.5rem 0;
+  color: var(--retro-yellow);
+  text-transform: uppercase;
+  line-height: 1.4;
 }
 
-.precio {
-  font-size: 0.85rem;
-  font-weight: bold;
-  color: #f4a261;
+.card-juego p {
+  font-size: 0.7rem;
+  color: #ccc;
+  margin: 0.2rem 0;
+  font-family: inherit;
+}
+
+.card-juego .precio {
+  font-weight: 400;
+  color: var(--retro-green);
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  text-shadow: 2px 2px 0px var(--retro-black);
 }
 
 /* ===== MODAL ===== */
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.75);
+  background: rgba(0, 0, 0, 0.85);
+  /* Darker overlay */
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  backdrop-filter: none;
 }
 
 .modal {
-  background: #0b1020;
-  border-radius: 14px;
-  max-width: 900px;
-  width: 90%;
+  background: var(--retro-black);
+  border-radius: 0;
   display: flex;
-  gap: 1rem;
+  max-width: 1100px;
+  width: 96%;
+  max-height: 90%;
+  overflow: hidden;
+  border: 4px solid var(--retro-white);
+  box-shadow: 12px 12px 0px var(--retro-dark-grey);
+}
+
+.modal-left {
+  flex: 0 0 380px;
   padding: 1rem;
+  background: var(--retro-dark-grey);
+  border-right: 4px solid var(--retro-white);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+  gap: 0.8rem;
 }
 
-.modal-portada {
-  width: 260px;
+.modal-left img {
+  width: 100%;
+  max-height: 380px;
+  border-radius: 0;
   object-fit: cover;
-  border-radius: 10px;
+  border: 2px solid var(--retro-white);
+  image-rendering: pixelated;
 }
 
-.modal-info {
+.modal-right {
   flex: 1;
-  color: #e5e7eb;
+  padding: 2rem;
+  color: var(--retro-white);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow-y: auto;
+  background: var(--retro-black);
+  position: relative;
 }
 
-.modal-info h2 {
-  margin-top: 0;
+/* Scanline effect for modal text area */
+.modal-right::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg,
+      rgba(0, 0, 0, 0.15),
+      rgba(0, 0, 0, 0.15) 1px,
+      transparent 1px,
+      transparent 2px);
+  pointer-events: none;
+  z-index: 0;
 }
 
-.modal-info p {
-  font-size: 0.9rem;
-  line-height: 1.4;
+.modal-right>* {
+  position: relative;
+  z-index: 1;
+}
+
+.modal-right h2 {
+  font-size: 1.5rem;
+  margin: 0 0 1rem;
+  color: var(--retro-yellow);
+  text-transform: uppercase;
+  text-shadow: 4px 4px 0px var(--retro-pink);
+}
+
+.modal-right p {
+  font-size: 0.8rem;
+  color: var(--retro-white);
+  line-height: 1.8;
+  margin: 0;
+}
+
+.media-fila {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.media-fila img {
+  width: 140px;
+  height: 84px;
+  object-fit: cover;
+  border: 2px solid var(--retro-white);
+  flex: 0 0 auto;
+  cursor: pointer;
+}
+
+.video-container {
+  width: 100%;
+  border: 2px solid var(--retro-white);
+  background: #000;
+}
+
+.video-container iframe,
+.video-container video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  display: block;
+}
+
+.modal-right button {
+  margin-top: 2rem;
+  padding: 1rem 2rem;
+  border: 4px solid var(--retro-white);
+  background: var(--retro-pink);
+  color: var(--retro-white);
+  border-radius: 0;
+  cursor: pointer;
+  font-weight: 400;
+  text-transform: uppercase;
+  box-shadow: 6px 6px 0px var(--retro-dark-grey);
+  transition: transform 0.1s;
+  align-self: flex-start;
+}
+
+.modal-right button:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 4px 4px 0px var(--retro-dark-grey);
+  background: var(--retro-white);
+  color: var(--retro-pink);
+  border-color: var(--retro-pink);
+}
+
+.modal-right button:active {
+  transform: translate(6px, 6px);
+  box-shadow: none;
 }
 
 /* ===== CHIPS ===== */
 .chips {
   display: flex;
-  gap: 6px;
   flex-wrap: wrap;
-  margin: 4px 0 10px;
+  gap: 8px;
+  margin: 1rem 0;
 }
 
 .chip {
-  padding: 3px 8px;
-  border-radius: 999px;
-  font-size: 0.65rem;
-  font-weight: 600;
+  font-size: 0.6rem;
+  font-weight: 400;
+  padding: 6px 10px;
+  border-radius: 0;
+  color: var(--retro-black);
+  background: var(--retro-white);
+  text-transform: uppercase;
+  border: 2px solid var(--retro-black);
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.5);
 }
 
 .chip.categoria {
-  background: linear-gradient(135deg, #5ddcff, #c77dff);
-  color: #0b0f1f;
+  background: var(--retro-cyan);
 }
 
-.chip.plataforma {
-  background: linear-gradient(135deg, #2a9d8f, #1e7f74);
+/* Platform-specific colors (Retro-fied) */
+.chip.plataforma.plat-pc {
+  background: #ccc;
+  color: #000;
+}
+
+.chip.plataforma.plat-ps5 {
+  background: #00f;
   color: #fff;
+}
+
+.chip.plataforma.plat-ps4 {
+  background: #44f;
+  color: #fff;
+}
+
+.chip.plataforma.plat-xboxsx {
+  background: #0f0;
+  color: #000;
+}
+
+.chip.plataforma.plat-xboxone {
+  background: #0a0;
+  color: #fff;
+}
+
+.chip.plataforma.plat-switch {
+  background: #f00;
+  color: #fff;
+}
+
+.chip.plataforma.plat-ios {
+  background: #fff;
+  color: #000;
+}
+
+.chip.plataforma.plat-android {
+  background: #0f0;
+  color: #000;
+}
+
+.chip.plataforma.plat-mac {
+  background: #ccc;
+  color: #000;
+}
+
+.chip.plataforma.plat-linux {
+  background: #fb0;
+  color: #000;
+}
+
+.chip.plataforma.plat-default {
+  background: #888;
+  color: #000;
 }
 
 .precio-modal {
-  margin-top: 10px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  color: #f4a261;
+  font-weight: 400;
+  color: var(--retro-green);
+  margin-top: 1rem;
+  font-size: 1.5rem;
+  text-shadow: 3px 3px 0px var(--retro-black);
 }
 
-.modal button {
-  margin-top: 10px;
-  padding: 6px 14px;
-  border-radius: 8px;
-  border: none;
-  background: #2a9d8f;
-  color: #fff;
-  cursor: pointer;
+@media (max-width: 700px) {
+  .modal {
+    flex-direction: column;
+    max-height: 95%;
+    overflow-y: auto;
+  }
+
+  .modal-left {
+    flex: none;
+    width: 100%;
+    border-right: none;
+    border-bottom: 4px solid var(--retro-white);
+    padding: 1rem;
+  }
+
+  .card-juego img {
+    max-height: 140px;
+  }
+
+  .modal-right {
+    overflow-y: visible;
+  }
 }
-
-

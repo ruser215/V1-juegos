@@ -1,88 +1,81 @@
-/* ===== RESET + VARIABLES ===== */
-:root {
-  --bg-main: #0b0f19;
-  --bg-panel: #151a2d;
-  --bg-panel-soft: #1b2140;
-  --accent: #5ddcff;
-  --accent-2: #c77dff;
-  --text-main: #f1f1f1;
-  --text-muted: #9aa4c7;
-  --radius: 14px;
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
-}
-
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  background: radial-gradient(circle at top, #131a35, var(--bg-main));
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
-  color: var(--text-main);
-}
-
 /* ===== CONTENEDOR GENERAL ===== */
 .app-container {
-  max-width: 1500px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem 2.5rem 4rem;
+  padding: 2rem 1rem 4rem;
+  position: relative;
+  border-left: 4px solid var(--retro-dark-grey);
+  border-right: 4px solid var(--retro-dark-grey);
+  background-color: var(--retro-black);
+  min-height: 100vh;
+}
+
+/* Remove the gradient background overlay */
+.app-container::before {
+  display: none;
 }
 
 /* ===== CABECERAS ===== */
 .app-container h1 {
-  font-size: 1.6rem;
-  margin: 2.5rem 0 1rem;
-  font-weight: 700;
-  letter-spacing: 0.3px;
-  position: relative;
-  padding-left: 1.1rem;
+  margin: 2rem 0 1rem;
+  font-size: 1.5rem;
+  /* Large but fits pixel font */
+  font-weight: 400;
+  /* Pixel fonts usually don't have weight */
+  text-transform: uppercase;
+  color: var(--retro-yellow);
+  text-shadow: 4px 4px 0px var(--retro-pink);
+  padding-left: 0;
+  border-bottom: 4px solid var(--retro-green);
+  display: inline-block;
+  line-height: 1.8;
 }
 
-.app-container h1::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 4px;
-  width: 5px;
-  height: 70%;
-  border-radius: 5px;
-  background: linear-gradient(
-    180deg,
-    var(--accent),
-    var(--accent-2)
-  );
+/* Remove decorative elements on h1 */
+.app-container h1::before,
+.app-container h1::after {
+  display: none;
 }
 
 /* ===== FILTROS ===== */
 .filtros {
-  background: linear-gradient(
-    145deg,
-    var(--bg-panel),
-    var(--bg-panel-soft)
-  );
-  padding: 1.4rem 1.6rem;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
+  background: var(--retro-dark-grey);
+  border: 4px solid var(--retro-white);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-hard);
   position: relative;
-  overflow: hidden;
+  /* No radius, no blur */
 }
 
-/* Línea glow superior */
-.filtros::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 10%;
-  width: 80%;
-  height: 2px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    var(--accent),
-    transparent
-  );
-  opacity: 0.5;
+/* Remove decorative gradient lines */
+.filtros::after,
+.filtros::before {
+  display: none;
+}
+
+/* ===== INPUT DE FILTRO ===== */
+.app-container input[type="text"] {
+  width: 100%;
+  padding: 1rem;
+  border: 4px solid var(--retro-green);
+  background: var(--retro-black);
+  color: var(--retro-green);
+  box-shadow: none;
+  border-radius: 0;
+  outline: none;
+  font-family: "Press Start 2P", monospace;
+  text-transform: uppercase;
+}
+
+.app-container input[type="text"]::placeholder {
+  color: #555;
+  text-transform: none;
+}
+
+.app-container input[type="text"]:focus {
+  background: var(--retro-black);
+  border-color: var(--retro-pink);
+  box-shadow: 4px 4px 0px var(--retro-pink);
 }
 
 /* ===== ZONA DE JUEGOS ===== */
@@ -92,39 +85,33 @@ body {
 
 /* ===== MENSAJE VACÍO ===== */
 .no-resultados {
-  background: linear-gradient(
-    145deg,
-    #1a2040,
-    #12172c
-  );
-  border-radius: var(--radius);
+  background: var(--retro-dark-grey);
+  border: 4px dashed var(--retro-pink);
   padding: 2rem;
   text-align: center;
-  font-size: 1.1rem;
-  color: var(--text-muted);
-  box-shadow: var(--shadow);
+  font-size: 1rem;
+  color: var(--retro-white);
+  box-shadow: var(--shadow-hard);
 }
 
-/* ===== TRANSICIONES GLOBALES ===== */
-.filtros,
-.no-resultados {
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+.no-resultados::after {
+  display: none;
 }
 
+/* Interactividad Retro */
 .filtros:hover,
 .no-resultados:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0px var(--retro-cyan);
 }
 
-/* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .app-container {
-    padding: 1.5rem 1.2rem 3rem;
+    padding: 1rem;
+    border: none;
   }
 
   .app-container h1 {
-    font-size: 1.35rem;
+    font-size: 1.2rem;
   }
 }
-
