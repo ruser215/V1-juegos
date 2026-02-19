@@ -1,0 +1,118 @@
+.detalle-page {
+  padding: 16px;
+}
+
+.detalle-card {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 16px;
+  border: 3px solid var(--retro-white);
+  background: var(--retro-black);
+  box-shadow: 8px 8px 0 var(--retro-dark-grey);
+  padding: 14px;
+}
+
+.detalle-left {
+  border-right: 3px solid var(--retro-white);
+  padding-right: 14px;
+}
+
+.detalle-portada {
+  width: 100%;
+  max-height: 520px;
+  object-fit: cover;
+  border: 2px solid var(--retro-white);
+}
+
+.detalle-right {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chips-plataformas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.chips-categorias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+.chip-cat {
+  padding: 5px 8px;
+  border: 2px solid #000;
+  font-size: 0.7rem;
+  background: var(--retro-cyan);
+  color: #000;
+}
+
+.chip-plat {
+  padding: 5px 8px;
+  border: 2px solid #000;
+  font-size: 0.7rem;
+  color: #fff;
+}
+
+.chip-xbox {
+  background: #107c10;
+}
+
+.chip-switch {
+  background: #e60012;
+}
+
+.chip-playstation {
+  background: #003791;
+}
+
+.chip-pc {
+  background: #6e6e6e;
+}
+
+.chip-android {
+  background: #3ddc84;
+  color: #000;
+}
+
+.chip-ios {
+  background: #9aa0a6;
+}
+
+.chip-default {
+  background: #444;
+}
+
+.detalle-buy {
+  width: fit-content;
+  padding: 10px 14px;
+  border: 3px solid var(--retro-white);
+  background: var(--retro-pink);
+  color: var(--retro-white);
+  cursor: pointer;
+}
+
+.detalle-video {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 2px solid var(--retro-white);
+}
+
+@media (max-width: 860px) {
+  .detalle-card {
+    grid-template-columns: 1fr;
+  }
+
+  .detalle-left {
+    border-right: none;
+    border-bottom: 3px solid var(--retro-white);
+    padding-right: 0;
+    padding-bottom: 12px;
+  }
+}

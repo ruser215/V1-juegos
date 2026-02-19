@@ -3,12 +3,18 @@ import express from "express";
 import cors from "cors";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 import { all, get, initDb, run } from "./db.js";
 import { authRequired } from "./middleware/auth.js";
 import { normalizePagination } from "./utils/pagination.js";
 
 const app = express();
 const PORT = process.env.PORT || 4000;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const datosPath = path.join(__dirname, "..", "..", "datos.json");
 
 app.use(cors());
 app.use(express.json());
@@ -23,6 +29,29 @@ function signToken(user) {
 
 app.get("/api/health", (_req, res) => {
   res.json({ ok: true });
+});
+
+function leerCatalogo() {
+  if (!fs.existsSync(datosPath)) {
+    return { categorias: [], plataformas: [] };
+  }
+
+  const raw = fs.readFileSync(datosPath, "utf8");
+  const datos = JSON.parse(raw);
+  return {
+    categorias: Array.isArray(datos.categorias) ? datos.categorias : [],
+    plataformas: Array.isArray(datos.plataformas) ? datos.plataformas : []
+  };
+}
+
+app.get("/api/catalogo/categorias", (_req, res) => {
+  const { categorias } = leerCatalogo();
+  res.json(categorias);
+});
+
+app.get("/api/catalogo/plataformas", (_req, res) => {
+  const { plataformas } = leerCatalogo();
+  res.json(plataformas);
 });
 
 app.post("/api/auth/register", async (req, res) => {

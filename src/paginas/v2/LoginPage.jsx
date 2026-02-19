@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
+import "../../Estilos/AuthPages.css";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -22,15 +23,24 @@ function LoginPage() {
   };
 
   return (
-    <main style={{ padding: 16 }}>
-      <h1>Login</h1>
-      <form onSubmit={onSubmit} style={{ display: "grid", gap: 10, maxWidth: 360 }}>
-        <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <button type="submit" disabled={isLoading}>{isLoading ? "Entrando..." : "Entrar"}</button>
+    <main className="auth-page">
+      <section className="auth-card">
+      <h1 className="auth-title">Login</h1>
+      <p className="auth-subtitle">Inicia sesión con tu cuenta para comprar y acceder al carrito.</p>
+      <form onSubmit={onSubmit} className="auth-form">
+        <div className="auth-field">
+          <label htmlFor="login-email" className="auth-label">Correo electrónico</label>
+          <input id="login-email" className="auth-input" type="email" placeholder="ejemplo@correo.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
+        </div>
+        <div className="auth-field">
+          <label htmlFor="login-password" className="auth-label">Contraseña</label>
+          <input id="login-password" className="auth-input" type="password" placeholder="Tu contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        </div>
+        <button className="auth-button" type="submit" disabled={isLoading}>{isLoading ? "Entrando..." : "Entrar"}</button>
       </form>
-      {error && <p>{error}</p>}
-      <p>¿No tienes cuenta? <Link to="/register">Regístrate</Link></p>
+      {error && <p className="auth-error">{error}</p>}
+      <p className="auth-footer">¿No tienes cuenta? <Link to="/register">Regístrate</Link></p>
+      </section>
     </main>
   );
 }

@@ -1,4 +1,5 @@
 import sqlite3 from "sqlite3";
+import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -74,5 +75,42 @@ export async function initDb() {
       "INSERT INTO users (username, email, password_hash, role, created_at) VALUES (?, ?, ?, ?, ?)",
       ["admin", "admin@demo.com", passwordHash, "admin", new Date().toISOString()]
     );
+  }
+
+  const adminUser = await get("SELECT id FROM users WHERE email = ?", ["admin@demo.com"]);
+  const gamesCount = await get("SELECT COUNT(*) as total FROM games");
+
+  if ((gamesCount?.total || 0) === 0) {
+    const datosPath = path.join(__dirname, "..", "..", "datos.json");
+
+    if (fs.existsSync(datosPath)) {
+      const raw = fs.readFileSync(datosPath, "utf8");
+      const datos = JSON.parse(raw);
+      const juegos = Array.isArray(datos?.juegos) ? datos.juegos : [];
+      const companias = Array.isArray(datos?.companias) ? datos.companias : [];
+
+      for (const juego of juegos) {
+        const companiaPorId = companias.find((c) => String(c.id) === String(juego.compania_id))?.nombre;
+
+        await run(
+          `INSERT INTO games
+          (nombre, descripcion, fecha_lanzamiento, compania, categoria_ids, plataforma_ids, precio, portada, video, owner_id, created_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          [
+            juego.nombre || "Sin nombre",
+            juego.descripcion || juego.Descripcion || "",
+            juego.fecha_lanzamiento || juego.fechaLanzamiento || null,
+            juego.compania || juego.compañia || companiaPorId || null,
+            JSON.stringify(Array.isArray(juego.categoria_ids) ? juego.categoria_ids.map(String) : []),
+            JSON.stringify(Array.isArray(juego.plataforma_ids) ? juego.plataforma_ids.map(String) : []),
+            Number(juego.precio) || 0,
+            juego.portada || juego.Portada || null,
+            juego.video || juego.url_video || juego.urlVideo || null,
+            adminUser.id,
+            new Date().toISOString()
+          ]
+        );
+      }
+    }
   }
 }
