@@ -1,5 +1,7 @@
 .detalle-page {
   padding: 16px;
+  max-width: 1180px;
+  margin: 0 auto;
 }
 
 .detalle-card {
@@ -7,14 +9,15 @@
   display: grid;
   grid-template-columns: 360px 1fr;
   gap: 16px;
-  border: 3px solid var(--retro-white);
-  background: var(--retro-black);
-  box-shadow: 8px 8px 0 var(--retro-dark-grey);
+  border: 1px solid rgba(0, 255, 255, 0.4);
+  background: linear-gradient(160deg, rgba(17, 8, 33, 0.92), rgba(5, 3, 13, 0.92));
+  box-shadow: var(--glow-cyan), var(--shadow-hard);
   padding: 14px;
+  border-radius: 14px;
 }
 
 .detalle-left {
-  border-right: 3px solid var(--retro-white);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
   padding-right: 14px;
 }
 
@@ -22,13 +25,15 @@
   width: 100%;
   max-height: 520px;
   object-fit: cover;
-  border: 2px solid var(--retro-white);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  border-radius: 10px;
 }
 
 .detalle-right {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  color: var(--text-2);
 }
 
 .chips-plataformas {
@@ -47,17 +52,20 @@
 
 .chip-cat {
   padding: 5px 8px;
-  border: 2px solid #000;
-  font-size: 0.7rem;
-  background: var(--retro-cyan);
-  color: #000;
+  border: 1px solid rgba(0, 255, 255, 0.45);
+  font-size: 0.78rem;
+  background: rgba(0, 255, 255, 0.14);
+  color: var(--retro-cyan);
+  border-radius: 999px;
 }
 
 .chip-plat {
   padding: 5px 8px;
-  border: 2px solid #000;
-  font-size: 0.7rem;
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  font-size: 0.78rem;
   color: #fff;
+  border-radius: 999px;
+  text-shadow: 0 0 8px rgba(0, 0, 0, 0.35);
 }
 
 .chip-xbox {
@@ -92,16 +100,24 @@
 .detalle-buy {
   width: fit-content;
   padding: 10px 14px;
-  border: 3px solid var(--retro-white);
-  background: var(--retro-pink);
+  border: 1px solid rgba(255, 0, 255, 0.65);
+  background: rgba(255, 0, 255, 0.22);
   color: var(--retro-white);
   cursor: pointer;
+  border-radius: 8px;
+  transition: 0.2s ease;
+}
+
+.detalle-buy:hover {
+  box-shadow: var(--glow-pink);
+  transform: translateY(-1px);
 }
 
 .detalle-video {
   width: 100%;
   aspect-ratio: 16 / 9;
-  border: 2px solid var(--retro-white);
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  border-radius: 10px;
 }
 
 @media (max-width: 860px) {
@@ -111,7 +127,7 @@
 
   .detalle-left {
     border-right: none;
-    border-bottom: 3px solid var(--retro-white);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     padding-right: 0;
     padding-bottom: 12px;
   }

@@ -1,7 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&family=Rajdhani:wght@400;500;700&display=swap');
 
 :root {
-  /* Retro Arcade Palette */
   --retro-green: #0f0;
   --retro-pink: #f0f;
   --retro-cyan: #0ff;
@@ -9,30 +8,27 @@
   --retro-black: #000;
   --retro-dark-grey: #222;
   --retro-white: #fff;
-  
-  --bg-0: var(--retro-black);
-  --bg-1: var(--retro-dark-grey);
-  
-  --text-1: var(--retro-white);
-  --text-2: var(--retro-green);
-  
-  --accent: var(--retro-green);
-  --accent-2: var(--retro-pink);
-  --accent-3: var(--retro-cyan);
-  
-  --shadow-hard: 4px 4px 0px var(--retro-dark-grey);
-  --border-thick: 2px solid var(--text-1);
 
-  font-family: "Press Start 2P", cursive;
+  --bg-0: #05030d;
+  --bg-1: #110821;
+  --bg-2: #1a1030;
+
+  --text-1: var(--retro-white);
+  --text-2: #d8d8ff;
+
+  --accent: var(--retro-cyan);
+  --accent-2: var(--retro-pink);
+  --accent-3: var(--retro-green);
+
+  --glow-cyan: 0 0 8px var(--retro-cyan), 0 0 20px rgba(0, 255, 255, 0.35);
+  --glow-pink: 0 0 8px var(--retro-pink), 0 0 20px rgba(255, 0, 255, 0.35);
+  --shadow-hard: 0 0 0 1px rgba(255, 255, 255, 0.1), 0 10px 24px rgba(0, 0, 0, 0.45);
+
+  font-family: "Rajdhani", sans-serif;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 500;
   color: var(--text-1);
   background-color: var(--bg-0);
-  
-  /* Reset radius for blocky look */
-  --radius-xl: 0px;
-  --radius-lg: 0px;
-  --radius-md: 0px;
 }
 
 * {
@@ -42,24 +38,36 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background-color: var(--bg-0);
-  background-image: 
-    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
-    linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-  background-size: 100% 2px, 3px 100%;
   color: var(--text-1);
-  font-family: "Press Start 2P", cursive;
+  font-family: "Rajdhani", sans-serif;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(0, 255, 255, 0.16), transparent 35%),
+    radial-gradient(circle at 85% 10%, rgba(255, 0, 255, 0.2), transparent 30%),
+    radial-gradient(circle at 50% 80%, rgba(0, 255, 0, 0.09), transparent 35%),
+    linear-gradient(180deg, var(--bg-1), var(--bg-0));
+}
+
+#root {
+  min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: "Orbitron", sans-serif;
+  letter-spacing: 0.05em;
 }
 
 a {
   color: var(--retro-cyan);
   text-decoration: none;
-  border-bottom: 2px solid transparent;
+  transition: 0.2s ease;
 }
 
 a:hover {
   color: var(--retro-yellow);
-  border-bottom: 2px solid var(--retro-yellow);
+  text-shadow: 0 0 8px rgba(255, 255, 0, 0.7);
 }
 
 ::selection {
@@ -67,22 +75,21 @@ a:hover {
   color: var(--retro-black);
 }
 
-/* Scrollbar styling */
 ::-webkit-scrollbar {
-  width: 12px;
-  background: var(--retro-black);
+  width: 10px;
+  background: var(--bg-0);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--retro-green);
-  border: 2px solid var(--retro-black);
+  background: linear-gradient(var(--retro-cyan), var(--retro-pink));
+  border-radius: 999px;
 }
 
 button,
 input,
 textarea,
 select {
-  font-family: "Press Start 2P", cursive;
-  font-size: inherit;
+  font-family: "Rajdhani", sans-serif;
+  font-size: 1rem;
   color: inherit;
 }

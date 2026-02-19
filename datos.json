@@ -283,14 +283,6 @@
       "nombre": "Linux"
     },
     {
-      "id": "11",
-      "nombre": "PS5"
-    },
-    {
-      "id": "12",
-      "nombre": "Switch"
-    },
-    {
       "id": "13",
       "nombre": "Otras"
     }
@@ -467,7 +459,7 @@
       "Portada": "https://i.3djuegos.com/juegos/9205/zelda_wii_u/fotos/ficha/zelda_wii_u-5953251.webp",
       "Descripcion": "Una aventura épica en un vasto mundo abierto lleno de descubrimientos.",
       "precio": "59.99",
-      "compania_id": "8"
+      "compania_id": "1"
     },
     {
       "id": "9",
@@ -815,7 +807,7 @@
       ],
       "plataforma_ids": [
         "1",
-        "11",
+        "2",
         "13"
       ],
       "fecha_lanzamiento": "2026-02-18",

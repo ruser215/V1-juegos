@@ -44,8 +44,8 @@ function TodosJuegosPage() {
         setGames(gamesResponse.data.data);
         setCategorias(categoriasResponse.data);
         setPlataformas(plataformasResponse.data);
-        setCategoriasSeleccionadas(categoriasResponse.data.map((categoria) => String(categoria.id)));
-        setPlataformasSeleccionadas(plataformasResponse.data.map((plataforma) => String(plataforma.id)));
+        setCategoriasSeleccionadas([]);
+        setPlataformasSeleccionadas([]);
       } catch (e) {
         setError(e?.response?.data?.message || "No se pudieron cargar los juegos");
       } finally {
@@ -137,7 +137,7 @@ function TodosJuegosPage() {
   return (
     <main className="v2-page">
       <NavV2 />
-      <h1>Todos los videojuegos</h1>
+      <h1 className="v2-heading">Todos los videojuegos</h1>
       {error && <p>{error}</p>}
 
       <section className="v2-filtros">
@@ -145,6 +145,7 @@ function TodosJuegosPage() {
           <label htmlFor="buscador-juegos">Buscar juego</label>
           <input
             id="buscador-juegos"
+            className="v2-search-input"
             type="text"
             value={busqueda}
             onChange={(event) => setBusqueda(event.target.value)}
@@ -159,6 +160,7 @@ function TodosJuegosPage() {
               <label key={categoria.id} className="v2-check-item">
                 <input
                   type="checkbox"
+                  className="v2-check-input"
                   checked={categoriasSeleccionadas.includes(String(categoria.id))}
                   onChange={() => toggleCategoria(String(categoria.id))}
                 />
@@ -175,6 +177,7 @@ function TodosJuegosPage() {
               <label key={plataforma.id} className="v2-check-item">
                 <input
                   type="checkbox"
+                  className="v2-check-input"
                   checked={plataformasSeleccionadas.includes(String(plataforma.id))}
                   onChange={() => togglePlataforma(String(plataforma.id))}
                 />
@@ -184,6 +187,10 @@ function TodosJuegosPage() {
           </div>
         </div>
       </section>
+
+      {gamesFiltrados.length === 0 && (
+        <p className="v2-empty">No hay juegos que coincidan con los filtros actuales.</p>
+      )}
 
       <ul className="v2-grid">
         {gamesFiltrados.map((game) => (
@@ -200,8 +207,9 @@ function TodosJuegosPage() {
             <span className="v2-sub"><strong>Plataformas:</strong> {textoPlataformas(game.plataforma_ids)}</span>
             <span className="v2-price">€{game.precio}</span>
             <div className="v2-card-actions">
-              <Link to={`/juegos/${game.id}`} onClick={(event) => event.stopPropagation()}>Ver más</Link>
+              <Link className="v2-link-btn" to={`/juegos/${game.id}`} onClick={(event) => event.stopPropagation()}>Ver más</Link>
               <button
+                className="v2-buy-btn"
                 onClick={(event) => {
                   event.stopPropagation();
                   comprar(game.id);
@@ -272,8 +280,9 @@ function TodosJuegosPage() {
               )}
 
               <div className="v2-modal-actions">
-              <Link to={`/juegos/${juegoActivo.id}`} onClick={() => setJuegoActivo(null)}>Ver detalle completo</Link>
+              <Link className="v2-link-btn" to={`/juegos/${juegoActivo.id}`} onClick={() => setJuegoActivo(null)}>Ver detalle completo</Link>
               <button
+                className="v2-buy-btn"
                 onClick={() => {
                   setJuegoActivo(null);
                   comprar(juegoActivo.id);
@@ -281,7 +290,7 @@ function TodosJuegosPage() {
               >
                 Comprar
               </button>
-              <button onClick={() => setJuegoActivo(null)}>Cerrar</button>
+              <button className="v2-close-btn" onClick={() => setJuegoActivo(null)}>Cerrar</button>
             </div>
           </div>
         </div>
