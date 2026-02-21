@@ -1,20 +1,56 @@
-import { Link } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { AppBar, Box, Button, Chip, Toolbar, Typography } from "@mui/material";
 
 function NavV2() {
   const { user, isAuthenticated, logout } = useAuth();
 
   return (
-    <nav style={{ display: "flex", gap: "12px", padding: "12px", flexWrap: "wrap" }}>
-      <Link to="/juegos">Todos los juegos</Link>
-      <Link to="/carrito">Carrito</Link>
-      <Link to="/mis-juegos">Mis juegos</Link>
-      <Link to="/juegos/nuevo">Alta videojuego</Link>
-      {!isAuthenticated && <Link to="/login">Login</Link>}
-      {!isAuthenticated && <Link to="/register">Registro</Link>}
-      {user && <span>Usuario: {user.username} ({user.role})</span>}
-      {isAuthenticated && <button onClick={logout}>Cerrar sesión</button>}
-    </nav>
+    <AppBar position="static" color="default" elevation={1}>
+      <Toolbar sx={{ display: "flex", gap: 1, flexWrap: "wrap", alignItems: "center" }}>
+        <Typography variant="h6" sx={{ mr: 1 }}>
+          GameStore
+        </Typography>
+
+        <Button component={RouterLink} to="/juegos" variant="text">
+          Todos los juegos
+        </Button>
+        <Button component={RouterLink} to="/carrito" variant="text">
+          Carrito
+        </Button>
+        <Button component={RouterLink} to="/mis-juegos" variant="text">
+          Mis juegos
+        </Button>
+        <Button component={RouterLink} to="/juegos/nuevo" variant="text">
+          Alta videojuego
+        </Button>
+
+        <Box sx={{ ml: "auto", display: "flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}>
+          {!isAuthenticated && (
+            <Button component={RouterLink} to="/login" variant="outlined">
+              Login
+            </Button>
+          )}
+          {!isAuthenticated && (
+            <Button component={RouterLink} to="/register" variant="contained">
+              Registro
+            </Button>
+          )}
+          {user && (
+            <Chip
+              color="primary"
+              label={`Usuario: ${user.username} (${user.role})`}
+              variant="outlined"
+            />
+          )}
+          {isAuthenticated && (
+            <Button onClick={logout} color="error" variant="contained">
+              Cerrar sesión
+            </Button>
+          )}
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 }
 

@@ -2,6 +2,18 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import "../../Estilos/AuthPages.css";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Container,
+  Link as MuiLink,
+  Stack,
+  TextField,
+  Typography
+} from "@mui/material";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -23,25 +35,55 @@ function LoginPage() {
   };
 
   return (
-    <main className="auth-page">
-      <section className="auth-card">
-      <h1 className="auth-title">Login</h1>
-      <p className="auth-subtitle">Inicia sesión con tu cuenta para comprar y acceder al carrito.</p>
-      <form onSubmit={onSubmit} className="auth-form">
-        <div className="auth-field">
-          <label htmlFor="login-email" className="auth-label">Correo electrónico</label>
-          <input id="login-email" className="auth-input" type="email" placeholder="ejemplo@correo.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </div>
-        <div className="auth-field">
-          <label htmlFor="login-password" className="auth-label">Contraseña</label>
-          <input id="login-password" className="auth-input" type="password" placeholder="Tu contraseña" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        </div>
-        <button className="auth-button" type="submit" disabled={isLoading}>{isLoading ? "Entrando..." : "Entrar"}</button>
-      </form>
-      {error && <p className="auth-error">{error}</p>}
-      <p className="auth-footer">¿No tienes cuenta? <Link to="/register">Regístrate</Link></p>
-      </section>
-    </main>
+    <Container maxWidth="sm" sx={{ py: 6 }}>
+      <Card>
+        <CardContent>
+          <Stack spacing={2}>
+            <Typography variant="h4" component="h1">
+              Login
+            </Typography>
+            <Typography color="text.secondary">
+              Inicia sesión con tu cuenta para comprar y acceder al carrito.
+            </Typography>
+
+            <Box component="form" onSubmit={onSubmit} sx={{ display: "grid", gap: 2 }}>
+              <TextField
+                id="login-email"
+                type="email"
+                label="Correo electrónico"
+                placeholder="ejemplo@correo.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                fullWidth
+              />
+              <TextField
+                id="login-password"
+                type="password"
+                label="Contraseña"
+                placeholder="Tu contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                fullWidth
+              />
+              <Button type="submit" variant="contained" disabled={isLoading}>
+                {isLoading ? "Entrando..." : "Entrar"}
+              </Button>
+            </Box>
+
+            {error && <Alert severity="error">{error}</Alert>}
+
+            <Typography variant="body2">
+              ¿No tienes cuenta?{" "}
+              <MuiLink component={Link} to="/register">
+                Regístrate
+              </MuiLink>
+            </Typography>
+          </Stack>
+        </CardContent>
+      </Card>
+    </Container>
   );
 }
 

@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
+import { TextField } from "@mui/material";
 
 function FiltroNombre({ busqueda, setBusqueda }) {
     return (
-        <div>
-            <input
-                type="text"
-                placeholder="Filtrar por nombre"
-                value={busqueda}
-                onChange={(e) => setBusqueda(e.target.value)}
-            />
-        </div>
+        <TextField
+            type="text"
+            label="Buscar"
+            placeholder="Filtrar por nombre"
+            value={busqueda}
+            onChange={(e) => setBusqueda(e.target.value)}
+            fullWidth
+        />
     );
 }
 

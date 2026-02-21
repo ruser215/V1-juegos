@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import MostrarJuegos from '../Componentes/MostrarListaJuegos.jsx';
 import MostrarCategorias from '../Componentes/MostrarCategoriasPlataformas.jsx';
 import { deleteById, getAll } from '../Componentes/crud.js';
-import "../Estilos/App.css"
 import FiltroNombre from '../Componentes/FitroNombre.jsx';
+import { Alert, Box, Container, Paper, Stack, Typography } from '@mui/material';
 
 function ListaJuegos() {
     const [listaJuegos, setListaJuegos] = useState([]);
@@ -83,48 +83,58 @@ function ListaJuegos() {
     llenarListaCategorias();
     llenarListaPlataformas();
   }, []);
-    return ( 
-        <div className="app-container">
-      <h1>Categorías</h1>
-      <div className="filtros">
-        <MostrarCategorias
-          listaCategorias={listaCategorias}
-          categoriasSeleccionadas={listaCategoriasFiltrada}
-          setCategoriasSeleccionadas={setListaCategoriasFiltradas}
-        />
-      </div>
 
-      <h1>Plataformas</h1>
-      <div className="filtros">
-        <MostrarCategorias
-          listaCategorias={listaPlataformas}
-          categoriasSeleccionadas={listaPlataformasFiltradas}
-          setCategoriasSeleccionadas={setListaPlataformasFiltradas}
-        />
-      </div>
+  return (
+    <Container maxWidth="lg" sx={{ py: 3 }}>
+      <Stack spacing={2}>
+        <Typography variant="h4" component="h1">Catálogo clásico</Typography>
 
-      <h1>Lista de juegos</h1>
-      <div className="zona-juegos">
-        {listaJuegosFiltrados.length === 0 ? (
-          <p className="no-resultados">
-            No hay juegos que coincidan con los filtros
-          </p>
-        ) : (
-          <MostrarJuegos
-            listaJuegos={listaJuegosFiltrados}
-            listaPlataformas={listaPlataformas}
-            listaCategorias={listaCategorias}
-            onEliminarJuego={eliminarJuego}
-          />
-        )}
-      </div>
+        <Paper sx={{ p: 2 }}>
+          <Stack spacing={1}>
+            <Typography variant="h6">Buscar por nombre o descripción</Typography>
+            <FiltroNombre busqueda={busqueda} setBusqueda={setBusqueda} />
+          </Stack>
+        </Paper>
 
-      <h1>Buscar por nombre o descripción</h1>
-      <div>
-        <FiltroNombre busqueda={busqueda} setBusqueda={setBusqueda} />
-      </div>
-    </div>
-     );
+        <Paper sx={{ p: 2 }}>
+          <Stack spacing={1}>
+            <Typography variant="h6">Categorías</Typography>
+            <MostrarCategorias
+              listaCategorias={listaCategorias}
+              categoriasSeleccionadas={listaCategoriasFiltrada}
+              setCategoriasSeleccionadas={setListaCategoriasFiltradas}
+            />
+          </Stack>
+        </Paper>
+
+        <Paper sx={{ p: 2 }}>
+          <Stack spacing={1}>
+            <Typography variant="h6">Plataformas</Typography>
+            <MostrarCategorias
+              listaCategorias={listaPlataformas}
+              categoriasSeleccionadas={listaPlataformasFiltradas}
+              setCategoriasSeleccionadas={setListaPlataformasFiltradas}
+            />
+          </Stack>
+        </Paper>
+
+        <Box>
+          <Typography variant="h5" sx={{ mb: 1 }}>Lista de juegos</Typography>
+          {listaJuegosFiltrados.length === 0 ? (
+            <Alert severity="info">No hay juegos que coincidan con los filtros</Alert>
+          ) : (
+            <MostrarJuegos
+              listaJuegos={listaJuegosFiltrados}
+              listaPlataformas={listaPlataformas}
+              listaCategorias={listaCategorias}
+              onEliminarJuego={eliminarJuego}
+            />
+          )}
+        </Box>
+      </Stack>
+    </Container>
+  );
 }
 
 export default ListaJuegos;
+

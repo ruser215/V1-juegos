@@ -4,7 +4,7 @@ import client from "../../api/client";
 import Loading from "../../Componentes/Loading";
 import NavV2 from "../../Componentes/NavV2";
 import { useAuth } from "../../context/AuthContext";
-import "../../Estilos/DetalleJuegoV2.css";
+import { Box, Button, Chip, Container, Paper, Stack, Typography } from "@mui/material";
 
 function toEmbed(url) {
   if (!url) return "";
@@ -81,73 +81,85 @@ function DetalleJuegoPage() {
         .filter(Boolean)
     : [];
 
-  const clasePlataforma = (nombre = "") => {
-    const texto = nombre.toLowerCase();
-    if (texto.includes("xbox")) return "chip-plat chip-xbox";
-    if (texto.includes("switch")) return "chip-plat chip-switch";
-    if (texto.includes("playstation") || texto.includes("ps5") || texto.includes("ps4")) return "chip-plat chip-playstation";
-    if (texto.includes("pc")) return "chip-plat chip-pc";
-    if (texto.includes("android")) return "chip-plat chip-android";
-    if (texto.includes("ios")) return "chip-plat chip-ios";
-    return "chip-plat chip-default";
-  };
-
   return (
-    <main className="detalle-page">
+    <Box component="main" sx={{ pb: 4 }}>
       <NavV2 />
-      <h1>{game.nombre}</h1>
-      <section className="detalle-card">
-        <div className="detalle-left">
-          {game.portada && <img src={game.portada} alt={game.nombre} className="detalle-portada" />}
-        </div>
+      <Container maxWidth="lg" sx={{ pt: 3 }}>
+        <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
+          {game.nombre}
+        </Typography>
 
-        <div className="detalle-right">
-          <p><b>Añadido por:</b> {game.owner_username}</p>
-          <p>{game.descripcion}</p>
-          <p><b>Fecha:</b> {game.fecha_lanzamiento || "No disponible"}</p>
-          <p><b>Compañía:</b> {game.compania || "No disponible"}</p>
-          <p><b>Precio:</b> €{game.precio}</p>
-
-          <div>
-            <b>Categorías:</b>
-            <div className="chips-categorias">
-              {nombresCategorias.length > 0 ? (
-                nombresCategorias.map((nombre) => (
-                  <span key={nombre} className="chip-cat">{nombre}</span>
-                ))
-              ) : (
-                <span className="chip-cat">No disponible</span>
+        <Paper sx={{ p: 2 }}>
+          <Box
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "1fr", md: "360px 1fr" },
+              gap: 2
+            }}
+          >
+            <Box>
+              {game.portada && (
+                <Box
+                  component="img"
+                  src={game.portada}
+                  alt={game.nombre}
+                  sx={{ width: "100%", borderRadius: 1, objectFit: "cover" }}
+                />
               )}
-            </div>
-          </div>
+            </Box>
 
-          <div>
-            <b>Plataformas:</b>
-            <div className="chips-plataformas">
-              {nombresPlataformas.length > 0 ? (
-                nombresPlataformas.map((nombre) => (
-                  <span key={nombre} className={clasePlataforma(nombre)}>{nombre}</span>
-                ))
-              ) : (
-                <span className="chip-plat chip-default">No disponible</span>
+            <Stack spacing={1.5}>
+              <Typography><b>Añadido por:</b> {game.owner_username}</Typography>
+              <Typography>{game.descripcion}</Typography>
+              <Typography><b>Fecha:</b> {game.fecha_lanzamiento || "No disponible"}</Typography>
+              <Typography><b>Compañía:</b> {game.compania || "No disponible"}</Typography>
+              <Typography variant="h6" color="primary"><b>Precio:</b> €{game.precio}</Typography>
+
+              <Box>
+                <Typography variant="subtitle1" sx={{ mb: 1 }}><b>Categorías:</b></Typography>
+                <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                  {nombresCategorias.length > 0 ? (
+                    nombresCategorias.map((nombre) => (
+                      <Chip key={nombre} label={nombre} size="small" />
+                    ))
+                  ) : (
+                    <Chip label="No disponible" size="small" />
+                  )}
+                </Stack>
+              </Box>
+
+              <Box>
+                <Typography variant="subtitle1" sx={{ mb: 1 }}><b>Plataformas:</b></Typography>
+                <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                  {nombresPlataformas.length > 0 ? (
+                    nombresPlataformas.map((nombre) => (
+                      <Chip key={nombre} label={nombre} size="small" color="secondary" />
+                    ))
+                  ) : (
+                    <Chip label="No disponible" size="small" color="secondary" />
+                  )}
+                </Stack>
+              </Box>
+
+              <Box>
+                <Button variant="contained" onClick={comprar}>Comprar</Button>
+              </Box>
+
+              {embedUrl && (
+                <Box
+                  component="iframe"
+                  title="video"
+                  src={embedUrl}
+                  sx={{ width: "100%", minHeight: 280, border: 0, borderRadius: 1 }}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
               )}
-            </div>
-          </div>
-
-          <button onClick={comprar} className="detalle-buy">Comprar</button>
-
-          {embedUrl && (
-            <iframe
-              title="video"
-              src={embedUrl}
-              className="detalle-video"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          )}
-        </div>
-      </section>
-    </main>
+            </Stack>
+          </Box>
+        </Paper>
+      </Container>
+    </Box>
   );
 }
 

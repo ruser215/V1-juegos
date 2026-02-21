@@ -5,6 +5,28 @@ import Loading from "../../Componentes/Loading";
 import NavV2 from "../../Componentes/NavV2";
 import { useAuth } from "../../context/AuthContext";
 import "../../Estilos/TodosJuegosV2.css";
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Checkbox,
+  Chip,
+  Container,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControlLabel,
+  FormGroup,
+  Paper,
+  Stack,
+  TextField,
+  Typography
+} from "@mui/material";
 
 function TodosJuegosPage() {
   const navigate = useNavigate();
@@ -19,7 +41,7 @@ function TodosJuegosPage() {
   const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([]);
   const [plataformasSeleccionadas, setPlataformasSeleccionadas] = useState([]);
 
-  const comprar = (idJuego) => {
+  const comprar = () => {
     if (!isAuthenticated) {
       navigate("/login");
       return;
@@ -135,168 +157,221 @@ function TodosJuegosPage() {
   if (loading) return <Loading texto="Cargando videojuegos..." />;
 
   return (
-    <main className="v2-page">
+    <Box component="main" sx={{ pb: 4 }}>
       <NavV2 />
-      <h1 className="v2-heading">Todos los videojuegos</h1>
-      {error && <p>{error}</p>}
+      <Container maxWidth="lg" sx={{ pt: 3 }}>
+        <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
+          Todos los videojuegos
+        </Typography>
+        {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
 
-      <section className="v2-filtros">
-        <div className="v2-search-box">
-          <label htmlFor="buscador-juegos">Buscar juego</label>
-          <input
-            id="buscador-juegos"
-            className="v2-search-input"
-            type="text"
-            value={busqueda}
-            onChange={(event) => setBusqueda(event.target.value)}
-            placeholder="Nombre o descripción"
-          />
-        </div>
+        <Paper sx={{ p: 2, mb: 3 }}>
+          <Stack spacing={2}>
+            <TextField
+              id="buscador-juegos"
+              label="Buscar juego"
+              type="text"
+              value={busqueda}
+              onChange={(event) => setBusqueda(event.target.value)}
+              placeholder="Nombre o descripción"
+              fullWidth
+            />
 
-        <div className="v2-filtro-grupo">
-          <h3>Categorías</h3>
-          <div className="v2-filtro-checks">
-            {categorias.map((categoria) => (
-              <label key={categoria.id} className="v2-check-item">
-                <input
-                  type="checkbox"
-                  className="v2-check-input"
-                  checked={categoriasSeleccionadas.includes(String(categoria.id))}
-                  onChange={() => toggleCategoria(String(categoria.id))}
-                />
-                <span>{categoria.nombre}</span>
-              </label>
-            ))}
-          </div>
-        </div>
+            <Box>
+              <Typography variant="h6" sx={{ mb: 1 }}>Categorías</Typography>
+              <FormGroup row>
+                {categorias.map((categoria) => (
+                  <FormControlLabel
+                    key={categoria.id}
+                    control={(
+                      <Checkbox
+                        checked={categoriasSeleccionadas.includes(String(categoria.id))}
+                        onChange={() => toggleCategoria(String(categoria.id))}
+                      />
+                    )}
+                    label={categoria.nombre}
+                  />
+                ))}
+              </FormGroup>
+            </Box>
 
-        <div className="v2-filtro-grupo">
-          <h3>Plataformas</h3>
-          <div className="v2-filtro-checks">
-            {plataformas.map((plataforma) => (
-              <label key={plataforma.id} className="v2-check-item">
-                <input
-                  type="checkbox"
-                  className="v2-check-input"
-                  checked={plataformasSeleccionadas.includes(String(plataforma.id))}
-                  onChange={() => togglePlataforma(String(plataforma.id))}
-                />
-                <span>{plataforma.nombre}</span>
-              </label>
-            ))}
-          </div>
-        </div>
-      </section>
+            <Box>
+              <Typography variant="h6" sx={{ mb: 1 }}>Plataformas</Typography>
+              <FormGroup row>
+                {plataformas.map((plataforma) => (
+                  <FormControlLabel
+                    key={plataforma.id}
+                    control={(
+                      <Checkbox
+                        checked={plataformasSeleccionadas.includes(String(plataforma.id))}
+                        onChange={() => togglePlataforma(String(plataforma.id))}
+                      />
+                    )}
+                    label={plataforma.nombre}
+                  />
+                ))}
+              </FormGroup>
+            </Box>
+          </Stack>
+        </Paper>
 
-      {gamesFiltrados.length === 0 && (
-        <p className="v2-empty">No hay juegos que coincidan con los filtros actuales.</p>
-      )}
+        {gamesFiltrados.length === 0 && (
+          <Alert severity="info" sx={{ mb: 2 }}>
+            No hay juegos que coincidan con los filtros actuales.
+          </Alert>
+        )}
 
-      <ul className="v2-grid">
-        {gamesFiltrados.map((game) => (
-          <li key={game.id} className="v2-card" onClick={() => toggleJuegoActivo(game)}>
-            {game.portada && (
-              <img src={game.portada} alt={game.nombre} />
-            )}
-            <strong className="v2-title">{game.nombre}</strong>
-            <span className="v2-sub">Añadido por: {game.owner_username}</span>
-            <span className="v2-sub">
-              {(game.descripcion || "").slice(0, 100)}{(game.descripcion || "").length > 100 ? "..." : ""}
-            </span>
-            <span className="v2-sub"><strong>Géneros:</strong> {textoCategorias(game.categoria_ids)}</span>
-            <span className="v2-sub"><strong>Plataformas:</strong> {textoPlataformas(game.plataforma_ids)}</span>
-            <span className="v2-price">€{game.precio}</span>
-            <div className="v2-card-actions">
-              <Link className="v2-link-btn" to={`/juegos/${game.id}`} onClick={(event) => event.stopPropagation()}>Ver más</Link>
-              <button
-                className="v2-buy-btn"
-                onClick={(event) => {
-                  event.stopPropagation();
-                  comprar(game.id);
-                }}
-              >
-                Comprar
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
-
-      {juegoActivo && (
-        <div onClick={() => setJuegoActivo(null)} className="v2-overlay">
-          <div onClick={(event) => event.stopPropagation()} className="v2-modal">
-            <div className="v2-modal-left">
-              {juegoActivo.portada && <img src={juegoActivo.portada} alt={juegoActivo.nombre} />}
-            </div>
-            <div className="v2-modal-right">
-              <h2>{juegoActivo.nombre}</h2>
-              <p><strong>Descripción completa:</strong> {juegoActivo.descripcion || "No disponible"}</p>
-              <p><strong>Fecha de lanzamiento:</strong> {juegoActivo.fecha_lanzamiento || "No disponible"}</p>
-              <p><strong>Compañía:</strong> {juegoActivo.compania || "No disponible"}</p>
-              <p><strong>Añadido por:</strong> {juegoActivo.owner_username || "No disponible"}</p>
-              <p><strong>Precio:</strong> €{juegoActivo.precio}</p>
-
-              <div>
-                <strong>Géneros</strong>
-                <p>{textoCategorias(juegoActivo.categoria_ids)}</p>
-                <div className="v2-chips">
-                  {nombresCategorias(juegoActivo.categoria_ids).length > 0 ? (
-                    nombresCategorias(juegoActivo.categoria_ids).map((nombre) => (
-                      <span key={nombre} className="v2-chip">{nombre}</span>
-                    ))
-                  ) : (
-                    <span className="v2-sub">IDs: {Array.isArray(juegoActivo.categoria_ids) ? juegoActivo.categoria_ids.join(", ") : "No disponible"}</span>
-                  )}
-                </div>
-              </div>
-
-              <div>
-                <strong>Plataformas</strong>
-                <p>{textoPlataformas(juegoActivo.plataforma_ids)}</p>
-                <div className="v2-chips">
-                  {nombresPlataformas(juegoActivo.plataforma_ids).length > 0 ? (
-                    nombresPlataformas(juegoActivo.plataforma_ids).map((nombre) => (
-                      <span key={nombre} className="v2-chip plat">{nombre}</span>
-                    ))
-                  ) : (
-                    <span className="v2-sub">IDs: {Array.isArray(juegoActivo.plataforma_ids) ? juegoActivo.plataforma_ids.join(", ") : "No disponible"}</span>
-                  )}
-                </div>
-              </div>
-
-              {!!juegoActivo.video && (
-                <div className="v2-video">
-                  {videoEmbed(juegoActivo.video) ? (
-                    <iframe
-                      src={videoEmbed(juegoActivo.video)}
-                      title={`Trailer de ${juegoActivo.nombre}`}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  ) : (
-                    <video src={juegoActivo.video} controls />
-                  )}
-                </div>
+        <Box
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+            gap: 2
+          }}
+        >
+          {gamesFiltrados.map((game) => (
+            <Card key={game.id} onClick={() => toggleJuegoActivo(game)} sx={{ cursor: "pointer" }}>
+              {game.portada && (
+                <CardMedia component="img" height="170" image={game.portada} alt={game.nombre} />
               )}
+              <CardContent>
+                <Typography variant="h6" gutterBottom>{game.nombre}</Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  Añadido por: {game.owner_username}
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  {(game.descripcion || "").slice(0, 100)}
+                  {(game.descripcion || "").length > 100 ? "..." : ""}
+                </Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}><strong>Géneros:</strong> {textoCategorias(game.categoria_ids)}</Typography>
+                <Typography variant="body2" sx={{ mb: 1 }}><strong>Plataformas:</strong> {textoPlataformas(game.plataforma_ids)}</Typography>
+                <Typography variant="h6" color="primary">€{game.precio}</Typography>
+              </CardContent>
+              <CardActions>
+                <Button
+                  component={Link}
+                  to={`/juegos/${game.id}`}
+                  onClick={(event) => event.stopPropagation()}
+                  size="small"
+                >
+                  Ver más
+                </Button>
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    comprar(game.id);
+                  }}
+                >
+                  Comprar
+                </Button>
+              </CardActions>
+            </Card>
+          ))}
+        </Box>
 
-              <div className="v2-modal-actions">
-              <Link className="v2-link-btn" to={`/juegos/${juegoActivo.id}`} onClick={() => setJuegoActivo(null)}>Ver detalle completo</Link>
-              <button
-                className="v2-buy-btn"
-                onClick={() => {
-                  setJuegoActivo(null);
-                  comprar(juegoActivo.id);
-                }}
-              >
-                Comprar
-              </button>
-              <button className="v2-close-btn" onClick={() => setJuegoActivo(null)}>Cerrar</button>
-            </div>
-          </div>
-        </div>
-        </div>
-      )}
-    </main>
+        <Dialog
+          open={Boolean(juegoActivo)}
+          onClose={() => setJuegoActivo(null)}
+          fullWidth
+          maxWidth="md"
+        >
+          {juegoActivo && (
+            <>
+              <DialogTitle>{juegoActivo.nombre}</DialogTitle>
+              <DialogContent dividers>
+                <Stack spacing={2}>
+                  {juegoActivo.portada && (
+                    <Box
+                      component="img"
+                      src={juegoActivo.portada}
+                      alt={juegoActivo.nombre}
+                      sx={{ width: "100%", maxHeight: 320, objectFit: "cover", borderRadius: 1 }}
+                    />
+                  )}
+
+                  <Typography><strong>Descripción completa:</strong> {juegoActivo.descripcion || "No disponible"}</Typography>
+                  <Typography><strong>Fecha de lanzamiento:</strong> {juegoActivo.fecha_lanzamiento || "No disponible"}</Typography>
+                  <Typography><strong>Compañía:</strong> {juegoActivo.compania || "No disponible"}</Typography>
+                  <Typography><strong>Añadido por:</strong> {juegoActivo.owner_username || "No disponible"}</Typography>
+                  <Typography><strong>Precio:</strong> €{juegoActivo.precio}</Typography>
+
+                  <Box>
+                    <Typography variant="subtitle1" gutterBottom>Géneros</Typography>
+                    <Typography variant="body2" sx={{ mb: 1 }}>{textoCategorias(juegoActivo.categoria_ids)}</Typography>
+                    <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                      {nombresCategorias(juegoActivo.categoria_ids).length > 0 ? (
+                        nombresCategorias(juegoActivo.categoria_ids).map((nombre) => (
+                          <Chip key={nombre} label={nombre} size="small" />
+                        ))
+                      ) : (
+                        <Typography variant="body2" color="text.secondary">
+                          IDs: {Array.isArray(juegoActivo.categoria_ids) ? juegoActivo.categoria_ids.join(", ") : "No disponible"}
+                        </Typography>
+                      )}
+                    </Stack>
+                  </Box>
+
+                  <Box>
+                    <Typography variant="subtitle1" gutterBottom>Plataformas</Typography>
+                    <Typography variant="body2" sx={{ mb: 1 }}>{textoPlataformas(juegoActivo.plataforma_ids)}</Typography>
+                    <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                      {nombresPlataformas(juegoActivo.plataforma_ids).length > 0 ? (
+                        nombresPlataformas(juegoActivo.plataforma_ids).map((nombre) => (
+                          <Chip key={nombre} label={nombre} size="small" color="secondary" />
+                        ))
+                      ) : (
+                        <Typography variant="body2" color="text.secondary">
+                          IDs: {Array.isArray(juegoActivo.plataforma_ids) ? juegoActivo.plataforma_ids.join(", ") : "No disponible"}
+                        </Typography>
+                      )}
+                    </Stack>
+                  </Box>
+
+                  {!!juegoActivo.video && (
+                    <Box>
+                      {videoEmbed(juegoActivo.video) ? (
+                        <Box
+                          component="iframe"
+                          src={videoEmbed(juegoActivo.video)}
+                          title={`Trailer de ${juegoActivo.nombre}`}
+                          sx={{ width: "100%", minHeight: 280, border: 0, borderRadius: 1 }}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      ) : (
+                        <Box component="video" src={juegoActivo.video} controls sx={{ width: "100%" }} />
+                      )}
+                    </Box>
+                  )}
+                </Stack>
+              </DialogContent>
+              <DialogActions>
+                <Button
+                  component={Link}
+                  to={`/juegos/${juegoActivo.id}`}
+                  onClick={() => setJuegoActivo(null)}
+                >
+                  Ver detalle completo
+                </Button>
+                <Button
+                  variant="contained"
+                  onClick={() => {
+                    setJuegoActivo(null);
+                    comprar(juegoActivo.id);
+                  }}
+                >
+                  Comprar
+                </Button>
+                <Button color="inherit" onClick={() => setJuegoActivo(null)}>
+                  Cerrar
+                </Button>
+              </DialogActions>
+            </>
+          )}
+        </Dialog>
+      </Container>
+    </Box>
   );
 }
 

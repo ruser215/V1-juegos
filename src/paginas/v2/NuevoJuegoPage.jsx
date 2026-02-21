@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import client from "../../api/client";
 import NavV2 from "../../Componentes/NavV2";
+import { Alert, Box, Button, Container, Paper, Stack, TextField, Typography } from "@mui/material";
 
 function NuevoJuegoPage() {
   const navigate = useNavigate();
@@ -48,23 +49,65 @@ function NuevoJuegoPage() {
   };
 
   return (
-    <main style={{ padding: 16 }}>
+    <Box component="main" sx={{ pb: 4 }}>
       <NavV2 />
-      <h1>Alta de videojuego</h1>
-      <form onSubmit={onSubmit} style={{ display: "grid", gap: 10, maxWidth: 520 }}>
-        <input name="nombre" placeholder="Nombre" value={form.nombre} onChange={onChange} required />
-        <textarea name="descripcion" placeholder="Descripción" value={form.descripcion} onChange={onChange} required />
-        <input name="fecha_lanzamiento" placeholder="Fecha lanzamiento (YYYY-MM-DD)" value={form.fecha_lanzamiento} onChange={onChange} />
-        <input name="compania" placeholder="Compañía" value={form.compania} onChange={onChange} />
-        <input name="precio" type="number" step="0.01" placeholder="Precio" value={form.precio} onChange={onChange} required />
-        <input name="portada" placeholder="URL portada" value={form.portada} onChange={onChange} />
-        <input name="video" placeholder="URL video" value={form.video} onChange={onChange} />
-        <input name="categoria_ids" placeholder="Categorías IDs separadas por coma (ej: 1,2)" value={form.categoria_ids} onChange={onChange} />
-        <input name="plataforma_ids" placeholder="Plataformas IDs separadas por coma (ej: 1,3)" value={form.plataforma_ids} onChange={onChange} />
-        <button type="submit">Guardar</button>
-      </form>
-      {error && <p>{error}</p>}
-    </main>
+      <Container maxWidth="sm" sx={{ pt: 3 }}>
+        <Typography variant="h4" component="h1" sx={{ mb: 2 }}>
+          Alta de videojuego
+        </Typography>
+        <Paper sx={{ p: 2 }}>
+          <Stack component="form" onSubmit={onSubmit} spacing={2}>
+            <TextField name="nombre" label="Nombre" value={form.nombre} onChange={onChange} required fullWidth />
+            <TextField
+              name="descripcion"
+              label="Descripción"
+              value={form.descripcion}
+              onChange={onChange}
+              required
+              fullWidth
+              multiline
+              minRows={3}
+            />
+            <TextField
+              name="fecha_lanzamiento"
+              label="Fecha lanzamiento (YYYY-MM-DD)"
+              value={form.fecha_lanzamiento}
+              onChange={onChange}
+              fullWidth
+            />
+            <TextField name="compania" label="Compañía" value={form.compania} onChange={onChange} fullWidth />
+            <TextField
+              name="precio"
+              type="number"
+              inputProps={{ step: "0.01" }}
+              label="Precio"
+              value={form.precio}
+              onChange={onChange}
+              required
+              fullWidth
+            />
+            <TextField name="portada" label="URL portada" value={form.portada} onChange={onChange} fullWidth />
+            <TextField name="video" label="URL video" value={form.video} onChange={onChange} fullWidth />
+            <TextField
+              name="categoria_ids"
+              label="Categorías IDs separadas por coma (ej: 1,2)"
+              value={form.categoria_ids}
+              onChange={onChange}
+              fullWidth
+            />
+            <TextField
+              name="plataforma_ids"
+              label="Plataformas IDs separadas por coma (ej: 1,3)"
+              value={form.plataforma_ids}
+              onChange={onChange}
+              fullWidth
+            />
+            <Button type="submit" variant="contained">Guardar</Button>
+          </Stack>
+        </Paper>
+        {error && <Alert severity="error" sx={{ mt: 2 }}>{error}</Alert>}
+      </Container>
+    </Box>
   );
 }
 

@@ -1,5 +1,18 @@
 import { useState } from "react";
-import "../Estilos/MostrarJuegos.css";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  CardMedia,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Stack,
+  Typography
+} from "@mui/material";
 
 function MostrarJuegos({ listaJuegos, listaCategorias, listaPlataformas, onEliminarJuego }) {
   const [juegoActivo, setJuegoActivo] = useState(null);
@@ -83,109 +96,136 @@ function MostrarJuegos({ listaJuegos, listaCategorias, listaPlataformas, onElimi
     setImagenSeleccionada("");
   };
 
-  // Función para asignar clase según plataforma
-  const clasePlataforma = (nombre) => {
+  const colorPlataforma = (nombre) => {
     switch (nombre.toLowerCase()) {
-      case "pc": return "plat-pc";
-      case "playstation 5": return "plat-ps5";
-      case "playstation 4": return "plat-ps4";
-      case "xbox series x/s": return "plat-xboxsx";
-      case "xbox one": return "plat-xboxone";
-      case "nintendo switch": return "plat-switch";
-      case "ios": return "plat-ios";
-      case "android": return "plat-android";
-      case "mac": return "plat-mac";
-      case "linux": return "plat-linux";
-      default: return "plat-default";
+      case "pc":
+      case "playstation 5":
+      case "playstation 4":
+      case "xbox series x/s":
+      case "xbox one":
+      case "nintendo switch":
+        return "secondary";
+      default:
+        return "default";
     }
   };
 
+  const portadaPrincipal = (juego) => obtenerListaImagenes(juego)[0] || juego.Portada || juego.portada || "";
+
   return (
     <>
-      {/* Tarjetas de juegos */}
-      <div className="grid-juegos">
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+          gap: 2
+        }}
+      >
         {listaJuegos.map((juego) => (
-          <div
+          <Card
             key={juego.id}
-            className="card-juego"
             onClick={() => abrirModal(juego)}
+            sx={{ cursor: "pointer" }}
           >
-            <img src={juego.Portada} alt={juego.nombre} />
-            <h2>{juego.nombre}</h2>
-            <p>{cortarTexto(juego.Descripcion)}</p>
-            <div className="chips">
+            {!!portadaPrincipal(juego) && (
+              <CardMedia component="img" height="170" image={portadaPrincipal(juego)} alt={juego.nombre} />
+            )}
+            <CardContent>
+              <Typography variant="h6" gutterBottom>{juego.nombre}</Typography>
+              <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                {cortarTexto(juego.Descripcion || juego.descripcion || "")}
+              </Typography>
+              <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap" sx={{ mb: 1 }}>
               {obtenerPlataformas(juego.plataforma_ids).map(plat => (
-                <span key={plat} className={`chip plataforma ${clasePlataforma(plat)}`}>
-                  {plat}
-                </span>
+                <Chip key={plat} label={plat} size="small" color={colorPlataforma(plat)} />
               ))}
-            </div>
-            <p className="precio">€{juego.precio}</p>
-          </div>
+              </Stack>
+              <Typography variant="h6" color="primary">€{juego.precio}</Typography>
+            </CardContent>
+          </Card>
         ))}
-      </div>
+      </Box>
 
-      {/* Modal emergente */}
-      {juegoActivo && (
-        <div className="modal-overlay" onClick={cerrarModal}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <div className="modal-left">
-              <img src={imagenSeleccionada || juegoActivo.Portada} alt={juegoActivo.nombre} />
-              {obtenerListaImagenes(juegoActivo).length > 1 && (
-                <div className="media-fila">
+      <Dialog open={Boolean(juegoActivo)} onClose={cerrarModal} fullWidth maxWidth="md">
+        {juegoActivo && (
+          <>
+            <DialogTitle>{juegoActivo.nombre}</DialogTitle>
+            <DialogContent dividers>
+              <Box
+                sx={{
+                  display: "grid",
+                  gridTemplateColumns: { xs: "1fr", md: "1fr 1fr" },
+                  gap: 2
+                }}
+              >
+                <Box>
+                  <Box
+                    component="img"
+                    src={imagenSeleccionada || portadaPrincipal(juegoActivo)}
+                    alt={juegoActivo.nombre}
+                    sx={{ width: "100%", borderRadius: 1, maxHeight: 320, objectFit: "cover", mb: 1 }}
+                  />
+                  {obtenerListaImagenes(juegoActivo).length > 1 && (
+                    <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
                   {obtenerListaImagenes(juegoActivo).map((imagen, indice) => (
-                    <img
+                    <Box
                       key={`${imagen}-${indice}`}
+                      component="img"
                       src={imagen}
                       alt={`${juegoActivo.nombre} ${indice + 1}`}
                       onClick={() => setImagenSeleccionada(imagen)}
+                      sx={{ width: 72, height: 56, objectFit: "cover", borderRadius: 1, cursor: "pointer" }}
                     />
                   ))}
-                </div>
-              )}
-            </div>
-            <div className="modal-right">
-              <h2>{juegoActivo.nombre}</h2>
-              <p>{juegoActivo.Descripcion}</p>
-              <p><strong>Fecha de lanzamiento:</strong> {obtenerCampo(juegoActivo, ["fecha_lanzamiento", "fechaLanzamiento", "fecha"])} </p>
-              <p><strong>Compañía:</strong> {obtenerCampo(juegoActivo, ["compania", "compañia", "empresa"])} </p>
-
-              {!!obtenerUrlVideo(juegoActivo) && (
-                <div className="video-container">
-                  {convertirYoutubeAEmbed(obtenerUrlVideo(juegoActivo)) ? (
-                    <iframe
-                      src={convertirYoutubeAEmbed(obtenerUrlVideo(juegoActivo))}
-                      title={`Trailer de ${juegoActivo.nombre}`}
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                      allowFullScreen
-                    />
-                  ) : (
-                    <video controls src={obtenerUrlVideo(juegoActivo)} />
+                    </Stack>
                   )}
-                </div>
-              )}
+                </Box>
 
-              <div className="chips">
-                {obtenerCategorias(juegoActivo.categoria_ids).map(cat => (
-                  <span key={cat} className="chip categoria">{cat}</span>
-                ))}
-              </div>
+                <Stack spacing={1.2}>
+                  <Typography>{juegoActivo.Descripcion || juegoActivo.descripcion || "No disponible"}</Typography>
+                  <Typography><strong>Fecha de lanzamiento:</strong> {obtenerCampo(juegoActivo, ["fecha_lanzamiento", "fechaLanzamiento", "fecha"])} </Typography>
+                  <Typography><strong>Compañía:</strong> {obtenerCampo(juegoActivo, ["compania", "compañia", "empresa"])} </Typography>
 
-              <div className="chips">
-                {obtenerPlataformas(juegoActivo.plataforma_ids).map(plat => (
-                  <span key={plat} className={`chip plataforma ${clasePlataforma(plat)}`}>
-                    {plat}
-                  </span>
-                ))}
-              </div>
+                  {!!obtenerUrlVideo(juegoActivo) && (
+                    <Box>
+                      {convertirYoutubeAEmbed(obtenerUrlVideo(juegoActivo)) ? (
+                        <Box
+                          component="iframe"
+                          src={convertirYoutubeAEmbed(obtenerUrlVideo(juegoActivo))}
+                          title={`Trailer de ${juegoActivo.nombre}`}
+                          sx={{ width: "100%", minHeight: 240, border: 0, borderRadius: 1 }}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      ) : (
+                        <Box component="video" controls src={obtenerUrlVideo(juegoActivo)} sx={{ width: "100%" }} />
+                      )}
+                    </Box>
+                  )}
 
-              <p className="precio-modal">Precio: €{juegoActivo.precio}</p>
-              <button onClick={eliminarJuego}>Eliminar videojuego</button>
-              <button onClick={cerrarModal}>Cerrar</button>
-            </div>
-          </div>
-        </div>
-      )}
+                  <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                    {obtenerCategorias(juegoActivo.categoria_ids).map(cat => (
+                      <Chip key={cat} label={cat} size="small" />
+                    ))}
+                  </Stack>
+
+                  <Stack direction="row" spacing={1} useFlexGap flexWrap="wrap">
+                    {obtenerPlataformas(juegoActivo.plataforma_ids).map(plat => (
+                      <Chip key={plat} label={plat} size="small" color={colorPlataforma(plat)} />
+                    ))}
+                  </Stack>
+
+                  <Typography variant="h6" color="primary">Precio: €{juegoActivo.precio}</Typography>
+                </Stack>
+              </Box>
+            </DialogContent>
+            <DialogActions>
+              <Button color="error" variant="contained" onClick={eliminarJuego}>Eliminar videojuego</Button>
+              <Button onClick={cerrarModal}>Cerrar</Button>
+            </DialogActions>
+          </>
+        )}
+      </Dialog>
     </>
   );
 }

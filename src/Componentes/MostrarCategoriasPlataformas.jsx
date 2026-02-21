@@ -1,4 +1,4 @@
-import "../Estilos/MostrarCategoriasPlataformas.css";
+import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 
 function MostrarCategorias({
   listaCategorias,
@@ -7,27 +7,29 @@ function MostrarCategorias({
 }) {
 
   const toggleCategoria = (id) => {
+    const idNormalizado = String(id);
     setCategoriasSeleccionadas((prev) =>
-      prev.includes(id)
-        ? prev.filter((catId) => catId !== id) // quitar
-        : [...prev, id]                        // añadir
+      prev.includes(idNormalizado)
+        ? prev.filter((catId) => catId !== idNormalizado)
+        : [...prev, idNormalizado]
     );
   };
 
   return (
-    <div className="categorias">
+    <FormGroup row>
       {listaCategorias.map((categoria) => (
-        <label key={categoria.id} className="categoria-item">
-          <input
-            type="checkbox"
-            checked={categoriasSeleccionadas.includes(categoria.id)}
-            onChange={() => toggleCategoria(categoria.id)}
-          />
-          <span className="checkmark"></span>
-          {categoria.nombre}
-        </label>
+        <FormControlLabel
+          key={categoria.id}
+          control={(
+            <Checkbox
+              checked={categoriasSeleccionadas.includes(String(categoria.id))}
+              onChange={() => toggleCategoria(categoria.id)}
+            />
+          )}
+          label={categoria.nombre}
+        />
       ))}
-    </div>
+    </FormGroup>
   );
 }
 
