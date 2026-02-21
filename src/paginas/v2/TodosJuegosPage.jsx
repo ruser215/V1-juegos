@@ -22,7 +22,12 @@ import {
   DialogTitle,
   FormControlLabel,
   FormGroup,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Pagination,
   Paper,
+  Select,
   Stack,
   TextField,
   Typography
@@ -40,6 +45,8 @@ function TodosJuegosPage() {
   const [busqueda, setBusqueda] = useState("");
   const [categoriasSeleccionadas, setCategoriasSeleccionadas] = useState([]);
   const [plataformasSeleccionadas, setPlataformasSeleccionadas] = useState([]);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(8);
 
   const comprar = () => {
     if (!isAuthenticated) {
@@ -154,6 +161,21 @@ function TodosJuegosPage() {
     return coincideBusqueda && coincideCategoria && coincidePlataforma;
   });
 
+  const totalPages = Math.max(Math.ceil(gamesFiltrados.length / pageSize), 1);
+  const inicio = (page - 1) * pageSize;
+  const fin = inicio + pageSize;
+  const gamesPaginados = gamesFiltrados.slice(inicio, fin);
+
+  useEffect(() => {
+    setPage(1);
+  }, [busqueda, categoriasSeleccionadas, plataformasSeleccionadas, pageSize]);
+
+  useEffect(() => {
+    if (page > totalPages) {
+      setPage(totalPages);
+    }
+  }, [page, totalPages]);
+
   if (loading) return <Loading texto="Cargando videojuegos..." />;
 
   return (
@@ -176,6 +198,22 @@ function TodosJuegosPage() {
               placeholder="Nombre o descripción"
               fullWidth
             />
+
+            <FormControl sx={{ minWidth: 220 }} size="small">
+              <InputLabel id="page-size-label">Juegos por página</InputLabel>
+              <Select
+                labelId="page-size-label"
+                id="page-size"
+                value={pageSize}
+                label="Juegos por página"
+                onChange={(event) => setPageSize(Number(event.target.value))}
+              >
+                <MenuItem value={4}>4</MenuItem>
+                <MenuItem value={8}>8</MenuItem>
+                <MenuItem value={12}>12</MenuItem>
+                <MenuItem value={20}>20</MenuItem>
+              </Select>
+            </FormControl>
 
             <Box>
               <Typography variant="h6" sx={{ mb: 1 }}>Categorías</Typography>
@@ -228,7 +266,7 @@ function TodosJuegosPage() {
             gap: 2
           }}
         >
-          {gamesFiltrados.map((game) => (
+          {gamesPaginados.map((game) => (
             <Card key={game.id} onClick={() => toggleJuegoActivo(game)} sx={{ cursor: "pointer" }}>
               {game.portada && (
                 <CardMedia component="img" height="170" image={game.portada} alt={game.nombre} />
@@ -269,6 +307,17 @@ function TodosJuegosPage() {
             </Card>
           ))}
         </Box>
+
+        {gamesFiltrados.length > 0 && (
+          <Stack direction="row" justifyContent="center" sx={{ mt: 3 }}>
+            <Pagination
+              count={totalPages}
+              page={page}
+              onChange={(_event, value) => setPage(value)}
+              color="primary"
+            />
+          </Stack>
+        )}
 
         <Dialog
           open={Boolean(juegoActivo)}
