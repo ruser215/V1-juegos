@@ -24,6 +24,11 @@ function NavV2() {
         <Button component={RouterLink} to="/juegos/nuevo" variant="text">
           Alta videojuego
         </Button>
+        {user?.role === "admin" && (
+          <Button component={RouterLink} to="/admin/reportes" variant="text">
+            Juegos reportados
+          </Button>
+        )}
 
         <Box sx={{ ml: "auto", display: "flex", gap: 1, alignItems: "center", flexWrap: "wrap" }}>
           {!isAuthenticated && (

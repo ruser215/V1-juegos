@@ -1,0 +1,39 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      PORT: 4000
+      JWT_SECRET: cambia_este_secreto
+      TOKEN_EXPIRES_IN: 8h
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: lfm2.5-thinking:1.2b
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend/data.sqlite:/app/data.sqlite
+    depends_on:
+      - ollama
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        VITE_API_URL: http://localhost:4000/api
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama-lfm
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+
+volumes:
+  ollama-data:

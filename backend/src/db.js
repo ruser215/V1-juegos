@@ -38,6 +38,8 @@ export function all(query, params = []) {
 }
 
 export async function initDb() {
+  await run("PRAGMA foreign_keys = ON");
+
   await run(`
     CREATE TABLE IF NOT EXISTS users (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -64,6 +66,46 @@ export async function initDb() {
       owner_id INTEGER NOT NULL,
       created_at TEXT NOT NULL,
       FOREIGN KEY(owner_id) REFERENCES users(id)
+    )
+  `);
+
+  await run(`
+    CREATE TABLE IF NOT EXISTS game_votes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      game_id INTEGER NOT NULL,
+      user_id INTEGER NOT NULL,
+      vote_type TEXT NOT NULL CHECK (vote_type IN ('like', 'dislike')),
+      created_at TEXT NOT NULL,
+      UNIQUE(game_id, user_id),
+      FOREIGN KEY(game_id) REFERENCES games(id) ON DELETE CASCADE,
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+    )
+  `);
+
+  await run(`
+    CREATE TABLE IF NOT EXISTS game_comments (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      game_id INTEGER NOT NULL,
+      user_id INTEGER NOT NULL,
+      parent_comment_id INTEGER,
+      content TEXT NOT NULL,
+      created_at TEXT NOT NULL,
+      FOREIGN KEY(game_id) REFERENCES games(id) ON DELETE CASCADE,
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE,
+      FOREIGN KEY(parent_comment_id) REFERENCES game_comments(id) ON DELETE CASCADE
+    )
+  `);
+
+  await run(`
+    CREATE TABLE IF NOT EXISTS game_reports (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      game_id INTEGER NOT NULL,
+      user_id INTEGER NOT NULL,
+      reason TEXT,
+      created_at TEXT NOT NULL,
+      UNIQUE(game_id, user_id),
+      FOREIGN KEY(game_id) REFERENCES games(id) ON DELETE CASCADE,
+      FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
     )
   `);
 

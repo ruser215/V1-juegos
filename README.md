@@ -57,3 +57,60 @@ cd backend
 docker build -t backend-juegos-v2 .
 docker run -p 4000:4000 backend-juegos-v2
 ```
+
+## Versión 5 - Asistente IA con lfm2.5-thinking (1.2b)
+
+### Qué incluye
+- Frontend dockerizado (Nginx).
+- Contenedor Ollama.
+- Asistente IA con botón flotante en esquina inferior derecha.
+- Reglas estrictas para responder **solo** sobre videojuegos existentes en la base de datos actual.
+
+### Levantar todo con Docker Compose
+```bash
+docker compose up -d --build
+```
+
+Servicios:
+- Frontend: `http://localhost:5173`
+- Backend API: `http://localhost:4000/api`
+- Ollama: `http://localhost:11434`
+
+### Ejecutar y probar Ollama (pull + run)
+1) Entra al contenedor:
+```bash
+docker exec -it ollama-lfm sh
+```
+
+2) Haz pull del modelo:
+```bash
+ollama pull lfm2.5-thinking:1.2b
+```
+
+3) Prueba rápida del modelo:
+```bash
+ollama run lfm2.5-thinking:1.2b "Recomiéndame un juego de acción"
+```
+
+También puedes probar desde fuera del contenedor:
+```bash
+curl http://localhost:11434/api/chat \
+	-H "Content-Type: application/json" \
+	-d '{"model":"lfm2.5-thinking:1.2b","stream":false,"messages":[{"role":"user","content":"hola"}]}'
+```
+
+### Endpoint del asistente
+- `POST /api/assistant/chat`
+- Body:
+```json
+{
+	"message": "¿Qué juego me recomiendas por popularidad?"
+}
+```
+
+### Instrucciones de comportamiento del asistente
+El backend define reglas para que el asistente:
+- Responda solo sobre videojuegos presentes en la BD actual.
+- No invente datos externos.
+- Recomiende con criterios reales de la BD (popularidad, precio, compañía, etc.).
+- Rechace preguntas fuera de alcance con una respuesta acotada.

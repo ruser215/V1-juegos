@@ -14,3 +14,11 @@ export function authRequired(req, res, next) {
     return res.status(401).json({ message: "Token inválido o expirado" });
   }
 }
+
+export function adminRequired(req, res, next) {
+  if (!req.user || req.user.role !== "admin") {
+    return res.status(403).json({ message: "Acceso solo para administradores" });
+  }
+
+  next();
+}

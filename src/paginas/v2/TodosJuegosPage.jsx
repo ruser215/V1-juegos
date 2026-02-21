@@ -47,6 +47,7 @@ function TodosJuegosPage() {
   const [plataformasSeleccionadas, setPlataformasSeleccionadas] = useState([]);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(8);
+  const [orden, setOrden] = useState("recientes");
 
   const comprar = () => {
     if (!isAuthenticated) {
@@ -63,9 +64,11 @@ function TodosJuegosPage() {
 
   useEffect(() => {
     const fetchGames = async () => {
+      setLoading(true);
       try {
+        const sortQuery = orden === "popularidad" ? "&sort=popularidad" : "";
         const [gamesResponse, categoriasResponse, plataformasResponse] = await Promise.all([
-          client.get("/games?page=1&limit=20"),
+          client.get(`/games?page=1&limit=200${sortQuery}`),
           client.get("/catalogo/categorias"),
           client.get("/catalogo/plataformas")
         ]);
@@ -75,6 +78,7 @@ function TodosJuegosPage() {
         setPlataformas(plataformasResponse.data);
         setCategoriasSeleccionadas([]);
         setPlataformasSeleccionadas([]);
+        setError("");
       } catch (e) {
         setError(e?.response?.data?.message || "No se pudieron cargar los juegos");
       } finally {
@@ -83,7 +87,49 @@ function TodosJuegosPage() {
     };
 
     fetchGames();
-  }, []);
+  }, [orden]);
+
+  const votar = async (gameId, voteType) => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      const response = await client.post(`/games/${gameId}/vote`, { voteType });
+      const voteData = response.data;
+
+      setGames((prev) =>
+        prev.map((item) =>
+          item.id === gameId
+            ? {
+                ...item,
+                likes: voteData.likes,
+                dislikes: voteData.dislikes,
+                popularidad: voteData.popularidad,
+                my_vote: voteData.my_vote
+              }
+            : item
+        )
+      );
+
+      setJuegoActivo((prev) =>
+        prev?.id === gameId
+          ? {
+              ...prev,
+              likes: voteData.likes,
+              dislikes: voteData.dislikes,
+              popularidad: voteData.popularidad,
+              my_vote: voteData.my_vote
+            }
+          : prev
+      );
+
+      setError("");
+    } catch (e) {
+      setError(e?.response?.data?.message || "No se pudo registrar el voto");
+    }
+  };
 
   const nombresCategorias = (ids = []) => {
     if (!Array.isArray(ids)) return [];
@@ -215,6 +261,20 @@ function TodosJuegosPage() {
               </Select>
             </FormControl>
 
+            <FormControl sx={{ minWidth: 220 }} size="small">
+              <InputLabel id="orden-label">Orden</InputLabel>
+              <Select
+                labelId="orden-label"
+                id="orden"
+                value={orden}
+                label="Orden"
+                onChange={(event) => setOrden(event.target.value)}
+              >
+                <MenuItem value="recientes">Más recientes</MenuItem>
+                <MenuItem value="popularidad">Popularidad (likes - dislikes)</MenuItem>
+              </Select>
+            </FormControl>
+
             <Box>
               <Typography variant="h6" sx={{ mb: 1 }}>Categorías</Typography>
               <FormGroup row>
@@ -282,9 +342,36 @@ function TodosJuegosPage() {
                 </Typography>
                 <Typography variant="body2" sx={{ mb: 1 }}><strong>Géneros:</strong> {textoCategorias(game.categoria_ids)}</Typography>
                 <Typography variant="body2" sx={{ mb: 1 }}><strong>Plataformas:</strong> {textoPlataformas(game.plataforma_ids)}</Typography>
+                <Stack direction="row" spacing={1} sx={{ mb: 1 }}>
+                  <Chip size="small" color="success" label={`Likes: ${game.likes || 0}`} />
+                  <Chip size="small" color="error" label={`Dislikes: ${game.dislikes || 0}`} />
+                  <Chip size="small" label={`Popularidad: ${game.popularidad || 0}`} />
+                </Stack>
                 <Typography variant="h6" color="primary">€{game.precio}</Typography>
               </CardContent>
               <CardActions>
+                <Button
+                  size="small"
+                  color="success"
+                  disabled={Boolean(game.my_vote)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    votar(game.id, "like");
+                  }}
+                >
+                  Like
+                </Button>
+                <Button
+                  size="small"
+                  color="error"
+                  disabled={Boolean(game.my_vote)}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    votar(game.id, "dislike");
+                  }}
+                >
+                  Dislike
+                </Button>
                 <Button
                   component={Link}
                   to={`/juegos/${game.id}`}
@@ -344,6 +431,11 @@ function TodosJuegosPage() {
                   <Typography><strong>Compañía:</strong> {juegoActivo.compania || "No disponible"}</Typography>
                   <Typography><strong>Añadido por:</strong> {juegoActivo.owner_username || "No disponible"}</Typography>
                   <Typography><strong>Precio:</strong> €{juegoActivo.precio}</Typography>
+                  <Stack direction="row" spacing={1}>
+                    <Chip size="small" color="success" label={`Likes: ${juegoActivo.likes || 0}`} />
+                    <Chip size="small" color="error" label={`Dislikes: ${juegoActivo.dislikes || 0}`} />
+                    <Chip size="small" label={`Popularidad: ${juegoActivo.popularidad || 0}`} />
+                  </Stack>
 
                   <Box>
                     <Typography variant="subtitle1" gutterBottom>Géneros</Typography>
