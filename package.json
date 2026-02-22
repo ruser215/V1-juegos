@@ -7,7 +7,7 @@
     "dev": "vite",
     "arrancarApi": "cd backend && [ -f .env ] || cp .env.example .env; npm run dev",
     "arrancarTodo": "bash ./arrancarTodo.sh",
-    "arrancarEnTerminales": "bash ./arrancarEnTerminales.sh",
+    "pararTodo": "bash ./pararTodo.sh",
     "dev:backend": "cd backend && npm run dev",
     "build": "vite build",
     "lint": "eslint .",

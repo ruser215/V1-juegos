@@ -37,6 +37,19 @@ npm install
 npm run dev
 ```
 
+## Arranque y parada unificados
+Con un único script se levantan frontend + backend y, si Docker está disponible, también Ollama:
+
+```bash
+bash ./arrancarTodo.sh
+```
+
+Para parar todo:
+
+```bash
+bash ./pararTodo.sh
+```
+
 ## Ejecutar backend
 ```bash
 cd backend
