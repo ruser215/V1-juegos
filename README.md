@@ -127,3 +127,46 @@ El backend define reglas para que el asistente:
 - No invente datos externos.
 - Recomiende con criterios reales de la BD (popularidad, precio, compañía, etc.).
 - Rechace preguntas fuera de alcance con una respuesta acotada.
+
+## Versión 6 - Tests End-to-End (Playwright)
+
+Se añadió una suite E2E en `tests/e2e/version6.spec.js` que cubre:
+- Registro de usuario.
+- Login incorrecto.
+- Redirección de ruta protegida sin sesión.
+- Listado de videojuegos.
+- Búsqueda.
+- Filtros por categorías.
+- Paginación.
+- Crear videojuego.
+- Ver detalle.
+- Eliminar videojuego desde detalle.
+- Logout y bloqueo de rutas protegidas.
+
+### Ejecutar E2E
+
+1) Arranca la app (frontend + backend), por ejemplo:
+```bash
+bash ./arrancarTodo.sh
+```
+
+2) En otra terminal, instala dependencias del proyecto raíz:
+```bash
+npm install
+```
+
+3) Instala Chromium para Playwright (solo primera vez):
+```bash
+npx playwright install chromium
+```
+
+4) Ejecuta los tests:
+```bash
+npm run test:e2e
+```
+
+Opcionales:
+```bash
+npm run test:e2e:headed
+npm run test:e2e:ui
+```

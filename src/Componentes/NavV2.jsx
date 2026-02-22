@@ -44,7 +44,7 @@ function NavV2() {
           {user && (
             <Chip
               color="primary"
-              label={`Usuario: ${user.username} (${user.role})`}
+              label={`Usuario: ${user.username}`}
               variant="outlined"
             />
           )}

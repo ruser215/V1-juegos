@@ -137,6 +137,21 @@ function DetalleJuegoPage() {
     }
   };
 
+  const eliminarJuego = async () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    try {
+      await client.delete(`/games/${id}`);
+      navigate("/mis-juegos");
+    } catch (e) {
+      setActionMessage("");
+      setActionError(e?.response?.data?.message || "No se pudo eliminar el videojuego");
+    }
+  };
+
   const votar = async (voteType) => {
     if (!isAuthenticated) {
       navigate("/login");
@@ -188,6 +203,7 @@ function DetalleJuegoPage() {
   const comentariosRaiz = comments.filter((comment) => !comment.parent_comment_id);
   const respuestasDe = (commentId) =>
     comments.filter((comment) => Number(comment.parent_comment_id) === Number(commentId));
+  const canDeleteGame = isAuthenticated && (Number(user?.id) === Number(game.owner_id) || user?.role === "admin");
 
   return (
     <Box component="main" sx={{ pb: 4 }}>
@@ -280,6 +296,11 @@ function DetalleJuegoPage() {
                   <Button color="warning" variant="outlined" onClick={reportarJuego}>
                     Reportar inapropiado
                   </Button>
+                  {canDeleteGame && (
+                    <Button color="error" variant="outlined" onClick={eliminarJuego}>
+                      Eliminar videojuego
+                    </Button>
+                  )}
                 </Stack>
               </Box>
 
