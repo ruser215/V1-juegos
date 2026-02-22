@@ -71,11 +71,397 @@ function mapNamesByIds(ids, catalogItems) {
 
 function cleanAssistantAnswer(rawText) {
   const text = String(rawText || "");
-
-  return text
+  let cleaned = text
     .replace(/<think>[\s\S]*?<\/think>/gi, "")
+    .replace(/`{2,3}\s*json/gi, "")
+    .replace(/`{2,3}/g, "")
     .replace(/\n{3,}/g, "\n\n")
     .trim();
+
+  if (cleaned.toLowerCase().includes("<think>")) {
+    cleaned = cleaned.replace(/<think>/gi, "").trim();
+
+    const normalized = cleaned.toLowerCase();
+    const markers = ["respuesta final:", "final answer:", "respuesta:", "recomendacion:", "recomendación:"];
+    let extracted = "";
+
+    for (const marker of markers) {
+      const index = normalized.lastIndexOf(marker);
+      if (index !== -1) {
+        extracted = cleaned.slice(index + marker.length).trim();
+        break;
+      }
+    }
+
+    if (!extracted) {
+      const blocks = cleaned.split(/\n{2,}/).map((block) => block.trim()).filter(Boolean);
+      extracted = blocks.at(-1) || cleaned;
+    }
+
+    cleaned = extracted;
+  }
+
+  const lower = cleaned.toLowerCase();
+  const looksLikeReasoning =
+    cleaned.length > 260 &&
+    (lower.startsWith("first,") || lower.startsWith("okay") || lower.includes("i need to") || lower.includes("let's"));
+
+  if (looksLikeReasoning) {
+    const sentences = cleaned
+      .split(/(?<=[.!?])\s+/)
+      .map((sentence) => sentence.trim())
+      .filter(Boolean);
+
+    if (sentences.length > 0) {
+      const tail = sentences.slice(-2).join(" ");
+      cleaned = tail || sentences.at(-1) || cleaned;
+    }
+  }
+
+  return cleaned;
+}
+
+function isInvalidAssistantAnswer(answer) {
+  const trimmed = String(answer || "").trim();
+  if (!trimmed) return true;
+
+  const lowered = trimmed.toLowerCase();
+  if (["...", "…", "ok", "vale"].includes(lowered)) return true;
+  if (trimmed.length < 8) return true;
+
+  return false;
+}
+
+function answerMentionsKnownGame(answer, gameNames) {
+  const normalizedAnswer = normalizeText(answer);
+  return gameNames.some((name) => normalizedAnswer.includes(normalizeText(name)));
+}
+
+function extractKnownGames(answer, gameNames) {
+  const normalizedAnswer = normalizeText(answer);
+  return gameNames.filter((name) => normalizedAnswer.includes(normalizeText(name)));
+}
+
+function buildCleanRecommendationFromAnswer(answer, gameNames) {
+  const matches = extractKnownGames(answer, gameNames);
+  if (matches.length === 0) return answer;
+
+  const normalized = normalizeText(answer);
+  const hasContext = ["porque", "destaca", "recomiendo", "mejor", "popular", "precio"].some((token) =>
+    normalized.includes(token)
+  );
+
+  if (hasContext) return answer;
+  return `Dentro de los juegos disponibles, te recomiendo ${matches[0]}.`;
+}
+
+function detectIntent(message) {
+  const normalized = normalizeText(message);
+
+  if (normalized.includes("mas caro") || normalized.includes("más caro") || normalized.includes("caro")) {
+    return "expensive";
+  }
+
+  if (normalized.includes("mas barato") || normalized.includes("más barato") || normalized.includes("barato")) {
+    return "cheap";
+  }
+
+  if (normalized.includes("peor") || normalized.includes("menos popular")) {
+    return "worst";
+  }
+
+  if (normalized.includes("mejor") || normalized.includes("recomiend") || normalized.includes("top")) {
+    return "best";
+  }
+
+  return "generic";
+}
+
+function isHybridQuickIntent(message) {
+  const normalized = normalizeText(message);
+  return [
+    "recomiend",
+    "suger",
+    "mejor",
+    "peor",
+    "mas caro",
+    "más caro",
+    "mas barato",
+    "más barato",
+    "caro",
+    "barato",
+    "popular"
+  ].some((token) => normalized.includes(token));
+}
+
+function getHybridScope(message, games) {
+  const intentTerms = new Set([
+    "mejor", "peor", "barato", "economico", "caro", "popular", "recomiend", "suger", "top", "mas", "más"
+  ]);
+
+  const terms = expandKeywords(getKeywords(message)).filter((term) => !intentTerms.has(term));
+  if (terms.length === 0) {
+    return { pool: games, hasTopicalTerms: false, noMatches: false };
+  }
+
+  const filtered = games.filter((game) => {
+    const haystack = normalizeText(
+      `${game.nombre || ""} ${game.descripcion || ""} ${game.compania || ""} ${game.categoriasTexto || ""} ${game.plataformasTexto || ""}`
+    );
+    return terms.some((term) => haystack.includes(term));
+  });
+
+  if (filtered.length === 0) {
+    return { pool: [], hasTopicalTerms: true, noMatches: true };
+  }
+
+  return { pool: filtered, hasTopicalTerms: true, noMatches: false };
+}
+
+function deterministicHybridAnswer(message, games) {
+  const intent = detectIntent(message);
+  const { pool, noMatches } = getHybridScope(message, games);
+
+  if (noMatches) {
+    return "No encuentro videojuegos de ese tipo en la base de datos actual.";
+  }
+
+  if (pool.length === 0) {
+    return "Solo puedo responder sobre videojuegos disponibles en esta base de datos.";
+  }
+
+  const byPopularity = pool
+    .slice()
+    .sort((a, b) => (Number(b.popularidad) - Number(a.popularidad)) || (Number(a.precio) - Number(b.precio)));
+  const byWorst = pool
+    .slice()
+    .sort((a, b) => (Number(a.popularidad) - Number(b.popularidad)) || (Number(b.precio) - Number(a.precio)));
+  const byCheap = pool
+    .slice()
+    .sort((a, b) => (Number(a.precio) - Number(b.precio)) || (Number(b.popularidad) - Number(a.popularidad)));
+  const byExpensive = pool
+    .slice()
+    .sort((a, b) => (Number(b.precio) - Number(a.precio)) || (Number(b.popularidad) - Number(a.popularidad)));
+
+  if (intent === "expensive") return formatGameAnswer("expensive", byExpensive[0]);
+  if (intent === "cheap") return formatGameAnswer("cheap", byCheap[0]);
+  if (intent === "worst") return formatGameAnswer("worst", byWorst[0]);
+
+  return formatGameAnswer("best", byPopularity[0]);
+}
+
+function pickGameFromAnswer(answer, relevantGames) {
+  const gameNames = relevantGames.map((game) => game.nombre);
+  const matches = extractKnownGames(answer, gameNames);
+  if (matches.length === 0) return null;
+
+  const selectedName = matches[0];
+  return relevantGames.find((game) => normalizeText(game.nombre) === normalizeText(selectedName)) || null;
+}
+
+function formatGameAnswer(intent, game) {
+  if (!game) return "Solo puedo responder sobre videojuegos disponibles en esta base de datos.";
+
+  if (intent === "expensive") {
+    return `${game.nombre} es de los más caros del catálogo actual (precio: €${game.precio}).`;
+  }
+
+  if (intent === "cheap") {
+    return `${game.nombre} es de los más baratos del catálogo actual (precio: €${game.precio}).`;
+  }
+
+  if (intent === "worst") {
+    return `Dentro de los juegos disponibles, uno de los peor valorados es ${game.nombre} (popularidad: ${game.popularidad}).`;
+  }
+
+  return `Dentro de los juegos disponibles, te recomiendo ${game.nombre}.`;
+}
+
+function normalizeAssistantOutput(answer, message, relevantGames) {
+  const gameNames = relevantGames.map((game) => game.nombre);
+  const cleaned = finalizeAssistantAnswer(answer, gameNames);
+  const lowered = normalizeText(cleaned);
+  const intent = detectIntent(message);
+
+  const englishMetaSignals = [
+    "the user", "so the answer should", "need to", "first sentence", "second sentence", "wait", "however"
+  ];
+  const hasMeta = englishMetaSignals.some((signal) => lowered.includes(signal));
+
+  const picked = pickGameFromAnswer(cleaned, relevantGames) || relevantGames[0] || null;
+
+  if (["expensive", "cheap", "worst"].includes(intent) && picked) {
+    return formatGameAnswer(intent, picked);
+  }
+
+  if (hasMeta || isInvalidAssistantAnswer(cleaned)) {
+    return formatGameAnswer(intent, picked);
+  }
+
+  return cleaned;
+}
+
+function parseIndexChoice(text, max) {
+  const match = String(text || "").match(/\b([1-9][0-9]?)\b/);
+  if (!match) return null;
+
+  const value = Number(match[1]);
+  if (!Number.isFinite(value) || value < 1 || value > max) return null;
+  return value;
+}
+
+function answerIsInScopeWithoutGame(answer) {
+  const normalized = normalizeText(answer);
+  return [
+    "no hay",
+    "no encuentro",
+    "no dispongo",
+    "no tengo videojuegos",
+    "solo puedo responder sobre videojuegos disponibles en esta base de datos"
+  ].some((token) => normalized.includes(token));
+}
+
+function finalizeAssistantAnswer(answer, gameNames) {
+  const cleaned = cleanAssistantAnswer(answer);
+  const lowered = normalizeText(cleaned);
+  const metaSignals = ["the user", "response should", "wait", "i should", "let me", "i need to"];
+  const looksMeta = metaSignals.some((signal) => lowered.includes(signal));
+
+  if (!looksMeta) return cleaned;
+
+  const matches = extractKnownGames(cleaned, gameNames);
+  if (matches.length === 0) return cleaned;
+
+  return `Dentro de los juegos disponibles, te recomiendo ${matches[0]}.`;
+}
+
+function parseAssistantContent(rawContent) {
+  const raw = String(rawContent || "").trim();
+  if (!raw) return "";
+
+  const fencedMatch = raw.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+  const normalizedRaw = fencedMatch ? fencedMatch[1].trim() : raw;
+
+  try {
+    const parsed = JSON.parse(normalizedRaw);
+    if (typeof parsed?.answer === "string") {
+      return cleanAssistantAnswer(parsed.answer);
+    }
+  } catch {
+    const answerMatch = normalizedRaw.match(/"answer"\s*:\s*"([\s\S]*?)"\s*[},]/i);
+    if (answerMatch?.[1]) {
+      const unescaped = answerMatch[1]
+        .replace(/\\n/g, "\n")
+        .replace(/\\"/g, '"');
+      return cleanAssistantAnswer(unescaped);
+    }
+
+    return cleanAssistantAnswer(normalizedRaw);
+  }
+
+  return cleanAssistantAnswer(normalizedRaw);
+}
+
+function normalizeText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+}
+
+function getKeywords(message) {
+  const stopWords = new Set([
+    "que", "qué", "de", "la", "el", "los", "las", "un", "una", "y", "o", "en", "por", "para",
+    "me", "mi", "tu", "te", "es", "del", "al", "con", "como", "cómo", "juego", "juegos",
+    "cual", "cuál", "cuales", "cuáles", "seria", "sería"
+  ]);
+
+  return normalizeText(message)
+    .split(/[^a-z0-9]+/)
+    .filter((token) => token.length > 2 && !stopWords.has(token));
+}
+
+function expandKeywords(keywords) {
+  const synonyms = {
+    nintendo: ["switch"],
+    switch: ["nintendo"],
+    sony: ["playstation", "ps", "ps4", "ps5"],
+    playstation: ["sony", "ps", "ps4", "ps5"],
+    xbox: ["microsoft"],
+    microsoft: ["xbox"],
+    ordenador: ["pc"],
+    computadora: ["pc"],
+    computador: ["pc"]
+  };
+
+  const expanded = new Set(keywords);
+
+  for (const keyword of keywords) {
+    const related = synonyms[keyword] || [];
+    for (const item of related) {
+      expanded.add(item);
+    }
+  }
+
+  return Array.from(expanded);
+}
+
+function chooseRelevantGames(games, message, limit = 8) {
+  const keywords = expandKeywords(getKeywords(message));
+  const intent = detectIntent(message);
+  const intentOnlyTerms = new Set([
+    "mejor", "peor", "barato", "economico", "caro", "popular", "recomiend", "top", "mas", "más"
+  ]);
+  const topicalKeywords = keywords.filter((kw) => !intentOnlyTerms.has(kw));
+
+  if (keywords.length === 0 || topicalKeywords.length === 0) {
+    if (intent === "expensive") {
+      return games
+        .slice()
+        .sort((a, b) => (Number(b.precio) - Number(a.precio)) || (Number(b.popularidad) - Number(a.popularidad)))
+        .slice(0, limit);
+    }
+
+    if (intent === "cheap") {
+      return games
+        .slice()
+        .sort((a, b) => (Number(a.precio) - Number(b.precio)) || (Number(b.popularidad) - Number(a.popularidad)))
+        .slice(0, limit);
+    }
+
+    if (intent === "worst") {
+      return games
+        .slice()
+        .sort((a, b) => (Number(a.popularidad) - Number(b.popularidad)) || (Number(b.precio) - Number(a.precio)))
+        .slice(0, limit);
+    }
+
+    return games
+      .slice()
+      .sort((a, b) => (Number(b.popularidad) - Number(a.popularidad)) || (Number(a.precio) - Number(b.precio)))
+      .slice(0, limit);
+  }
+
+  const scored = games.map((game) => {
+    const haystack = normalizeText(
+      `${game.nombre} ${game.descripcion || ""} ${game.compania || ""} ${game.categoriasTexto || ""} ${game.plataformasTexto || ""}`
+    );
+
+    let score = 0;
+    for (const kw of keywords) {
+      if (haystack.includes(kw)) score += 3;
+      if (normalizeText(game.nombre).includes(kw)) score += 3;
+    }
+
+    score += Number(game.popularidad || 0) * 0.5;
+
+    return { game, score };
+  });
+
+  return scored
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map((item) => item.game);
 }
 
 app.get("/api/health", (_req, res) => {
@@ -565,22 +951,38 @@ app.post("/api/assistant/chat", async (req, res) => {
       return res.json({ answer: "No hay videojuegos cargados en la base de datos para recomendar." });
     }
 
-    const gamesContext = games
-      .map((game) => {
-        const categoriaIds = JSON.parse(game.categoria_ids || "[]");
-        const plataformaIds = JSON.parse(game.plataforma_ids || "[]");
-        const categoriaNombres = mapNamesByIds(categoriaIds, categorias);
-        const plataformaNombres = mapNamesByIds(plataformaIds, plataformas);
+    const gamesPrepared = games.map((game) => {
+      const categoriaIds = JSON.parse(game.categoria_ids || "[]");
+      const plataformaIds = JSON.parse(game.plataforma_ids || "[]");
+      const categoriaNombres = mapNamesByIds(categoriaIds, categorias);
+      const plataformaNombres = mapNamesByIds(plataformaIds, plataformas);
 
+      return {
+        ...game,
+        categoriasTexto: categoriaNombres.join(", "),
+        plataformasTexto: plataformaNombres.join(", ")
+      };
+    });
+
+    const relevantGames = chooseRelevantGames(gamesPrepared, String(message).trim(), 8);
+    if (isHybridQuickIntent(message)) {
+      return res.json({
+        answer: deterministicHybridAnswer(String(message).trim(), gamesPrepared)
+      });
+    }
+    const relevantNames = relevantGames.map((game) => game.nombre);
+
+    const gamesContext = relevantGames
+      .map((game) => {
         return [
           `ID: ${game.id}`,
           `Nombre: ${game.nombre}`,
-          `Descripción: ${(game.descripcion || "No disponible").slice(0, 70)}`,
+          `Descripción: ${(game.descripcion || "No disponible").slice(0, 45)}`,
           `Compañía: ${game.compania || "No disponible"}`,
           `Fecha lanzamiento: ${game.fecha_lanzamiento || "No disponible"}`,
           `Precio: ${game.precio}`,
-          `Categorías: ${categoriaNombres.join(", ") || "No disponible"}`,
-          `Plataformas: ${plataformaNombres.join(", ") || "No disponible"}`,
+          `Categorías: ${game.categoriasTexto || "No disponible"}`,
+          `Plataformas: ${game.plataformasTexto || "No disponible"}`,
           `Likes: ${game.likes} | Dislikes: ${game.dislikes} | Popularidad: ${game.popularidad}`
         ].join(" | ");
       })
@@ -597,14 +999,19 @@ app.post("/api/assistant/chat", async (req, res) => {
       body: JSON.stringify({
         model: ollamaModel,
         stream: false,
+        keep_alive: "15m",
         think: false,
         options: {
-          num_predict: 220,
+          num_predict: 120,
+          num_ctx: 1024,
           temperature: 0.3
         },
         messages: [
           { role: "system", content: createAssistantInstructions(gamesContext) },
-          { role: "user", content: String(message).trim() }
+          {
+            role: "user",
+            content: `${String(message).trim()}\n\nResponde en español, en texto plano, sin markdown, sin bloques de código y sin JSON.`
+          }
         ]
       }),
       signal: controller.signal
@@ -621,13 +1028,169 @@ app.post("/api/assistant/chat", async (req, res) => {
     }
 
     const data = await ollamaResponse.json();
-    const answer = cleanAssistantAnswer(data?.message?.content || "");
+    const answer = normalizeAssistantOutput(parseAssistantContent(data?.message?.content || ""), message, relevantGames);
 
-    return res.json({ answer: answer || "No pude generar respuesta en este momento." });
+    const validScope =
+      answerMentionsKnownGame(answer, relevantNames) ||
+      answerIsInScopeWithoutGame(answer);
+
+    if (!isInvalidAssistantAnswer(answer) && validScope) {
+      return res.json({ answer });
+    }
+
+    const retryController = new AbortController();
+    const retryTimeout = setTimeout(() => retryController.abort(), 45000);
+
+    const retryResponse = await fetch(`${ollamaUrl}/api/chat`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: ollamaModel,
+        stream: false,
+        keep_alive: "15m",
+        think: false,
+        options: {
+          num_predict: 260,
+          num_ctx: 1024,
+          temperature: 0.15
+        },
+        messages: [
+          { role: "system", content: createAssistantInstructions(gamesContext) },
+          {
+            role: "user",
+            content: `${String(message).trim()}\n\nResponde en máximo 2 frases, texto plano, sin markdown, sin JSON y sin mostrar razonamiento interno.`
+          }
+        ]
+      }),
+      signal: retryController.signal
+    });
+
+    clearTimeout(retryTimeout);
+
+    if (!retryResponse.ok) {
+      return res.json({ answer: "No pude generar respuesta en este momento." });
+    }
+
+    const retryData = await retryResponse.json();
+    const retryAnswer = normalizeAssistantOutput(parseAssistantContent(retryData?.message?.content || ""), message, relevantGames);
+
+    const retryScope =
+      answerMentionsKnownGame(retryAnswer, relevantNames) ||
+      answerIsInScopeWithoutGame(retryAnswer);
+
+    if (isInvalidAssistantAnswer(retryAnswer) || !retryScope) {
+      const rescueController = new AbortController();
+      const rescueTimeout = setTimeout(() => rescueController.abort(), 30000);
+
+      const optionsText = relevantNames.slice(0, 8).join(", ");
+
+      try {
+        const rescueResponse = await fetch(`${ollamaUrl}/api/chat`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: ollamaModel,
+            stream: false,
+            keep_alive: "15m",
+            think: false,
+            options: {
+              num_predict: 80,
+              temperature: 0.1
+            },
+            messages: [
+              {
+                role: "system",
+                content:
+                  "Debes responder solo con videojuegos permitidos y en texto plano. No uses markdown, no uses JSON."
+              },
+              {
+                role: "user",
+                content: `Pregunta: ${String(message).trim()}\n\nVideojuegos permitidos: ${optionsText}\n\nElige SOLO un nombre exacto de la lista y responde en una frase corta mencionando ese nombre.`
+              }
+            ]
+          }),
+          signal: rescueController.signal
+        });
+
+        clearTimeout(rescueTimeout);
+
+        if (rescueResponse.ok) {
+          const rescueData = await rescueResponse.json();
+          const rescueAnswerRaw = normalizeAssistantOutput(parseAssistantContent(rescueData?.message?.content || ""), message, relevantGames);
+          const rescueAnswer = buildCleanRecommendationFromAnswer(rescueAnswerRaw, relevantNames);
+          const rescueScope = answerMentionsKnownGame(rescueAnswer, relevantNames);
+
+          if (!isInvalidAssistantAnswer(rescueAnswer) && rescueScope) {
+            return res.json({ answer: rescueAnswer });
+          }
+
+          const shortlist = relevantNames.slice(0, 5);
+          if (shortlist.length > 0) {
+            const numbered = shortlist.map((name, index) => `${index + 1}. ${name}`).join("\n");
+
+            const choiceResponse = await fetch(`${ollamaUrl}/api/chat`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                model: ollamaModel,
+                stream: false,
+                keep_alive: "15m",
+                think: false,
+                options: {
+                  num_predict: 8,
+                  temperature: 0
+                },
+                messages: [
+                  {
+                    role: "system",
+                    content:
+                      "Debes elegir solo una opción válida y responder únicamente con el número de opción."
+                  },
+                  {
+                    role: "user",
+                    content: `Pregunta: ${String(message).trim()}\n\nOpciones:\n${numbered}\n\nResponde solo con el número.`
+                  }
+                ]
+              })
+            });
+
+            if (choiceResponse.ok) {
+              const choiceData = await choiceResponse.json();
+              const choiceRaw = parseAssistantContent(choiceData?.message?.content || "");
+              const selectedIndex = parseIndexChoice(choiceRaw, shortlist.length);
+
+              if (selectedIndex) {
+                const selectedGame = shortlist[selectedIndex - 1];
+                return res.json({
+                  answer: `Dentro de los juegos disponibles, te recomiendo ${selectedGame}.`
+                });
+              }
+            }
+          }
+        }
+      } catch {
+      }
+
+      if (relevantNames.length > 0) {
+        return res.json({
+          answer: `Dentro de los juegos disponibles, te recomiendo ${relevantNames[0]}.`
+        });
+      }
+
+      return res.json({
+        answer: "Solo puedo responder sobre videojuegos disponibles en esta base de datos."
+      });
+    }
+
+    return res.json({ answer: retryAnswer });
   } catch (error) {
     const isAbort = error?.name === "AbortError";
+    if (isAbort) {
+      return res.status(504).json({ message: "Timeout consultando el asistente IA" });
+    }
+
     return res.status(500).json({
-      message: isAbort ? "Timeout consultando el asistente IA" : "Error del asistente IA",
+      message: "Error del asistente IA",
       error: error.message
     });
   }
